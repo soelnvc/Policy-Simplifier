@@ -1,0 +1,81 @@
+/* ============================================================
+   SKELETON LOADER
+   ============================================================ */
+
+.skeleton {
+  display: block;
+  background-color: var(--snow-container-high);
+  position: relative;
+  overflow: hidden;
+  /* subtle base pulse */
+  animation: skeletonPulse 1.5s ease-in-out infinite alternate;
+}
+
+/* Sparkle shimmer overlay */
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: skeletonShimmer 2s infinite;
+}
+
+/* Theme variations (dark mode safe) */
+[data-theme='dark'] .skeleton {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
+/* ── Variants ── */
+.skeleton--text {
+  border-radius: var(--radius-sm);
+  height: 1.2em; /* roughly matches text height */
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  width: 100%;
+}
+
+.skeleton--circular {
+  border-radius: 50%;
+}
+
+.skeleton--rectangular {
+  border-radius: 0;
+}
+
+.skeleton--rounded {
+  border-radius: var(--radius-lg);
+}
+
+/* ── Animations ── */
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes skeletonShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

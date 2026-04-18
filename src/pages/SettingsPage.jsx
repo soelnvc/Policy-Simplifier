@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../context/ToastContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -8,18 +9,17 @@ import './SettingsPage.css';
 
 function SettingsPage() {
   const { user, logout } = useAuth();
+  const { addToast } = useToast();
 
   // Profile
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [email] = useState(user?.email || '');
-  const [profileSaved, setProfileSaved] = useState(false);
 
   // Password
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [passwordSaved, setPasswordSaved] = useState(false);
 
   // Notifications
   const [notifications, setNotifications] = useState({
@@ -44,8 +44,7 @@ function SettingsPage() {
   // Handlers
   const handleProfileSave = (e) => {
     e.preventDefault();
-    setProfileSaved(true);
-    setTimeout(() => setProfileSaved(false), 2500);
+    addToast('Profile information saved successfully.', 'success');
   };
 
   const handlePasswordChange = (e) => {
@@ -59,11 +58,11 @@ function SettingsPage() {
       setPasswordError('Passwords do not match.');
       return;
     }
-    setPasswordSaved(true);
+    
+    addToast('Password updated successfully.', 'success');
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
-    setTimeout(() => setPasswordSaved(false), 2500);
   };
 
   const handleToggle = (key) => {
@@ -73,6 +72,7 @@ function SettingsPage() {
   const handleDeleteAccount = () => {
     setShowDeleteModal(false);
     setDeleteConfirm('');
+    addToast('Account deletion initiated.', 'warning');
     // In production: call Firebase deleteUser()
   };
 
@@ -158,7 +158,7 @@ function SettingsPage() {
 
                     <div className="settings__card-actions">
                       <Button type="submit" variant="primary">
-                        {profileSaved ? '✓ Saved' : 'Save Changes'}
+                        Save Changes
                       </Button>
                     </div>
                   </form>
@@ -196,7 +196,7 @@ function SettingsPage() {
                     </div>
                     <div className="settings__card-actions">
                       <Button type="submit" variant="primary">
-                        {passwordSaved ? '✓ Updated' : 'Update Password'}
+                        Update Password
                       </Button>
                     </div>
                   </form>
@@ -333,9 +333,13 @@ function SettingsPage() {
                   </div>
 
                   <div className="settings__card-actions">
-                    <Button variant="secondary" icon={
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                    }>
+                    <Button 
+                      variant="secondary" 
+                      onClick={() => addToast(`Exporting data as ${exportFormat.toUpperCase()}...`, 'default')}
+                      icon={
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                      }
+                    >
                       Export All Analyses
                     </Button>
                   </div>

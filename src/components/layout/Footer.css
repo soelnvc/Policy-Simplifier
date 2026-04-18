@@ -1,40 +1,33 @@
 /* ============================================================
-   FOOTER — Premium Dark Glassmorphic
-   "The Monolith" — Onyx tinted glass, editorial layout
+   FOOTER — Minimal Light (Apple Aesthetic)
    ============================================================ */
 
 .footer {
   margin-top: auto;
   position: relative;
-  background: linear-gradient(180deg, 
-    var(--onyx-rich) 0%, 
-    var(--onyx) 100%
-  );
-  color: var(--text-on-onyx);
-  overflow: hidden;
+  background: #f5f5f7;
+  color: #6e6e73;
+  padding-top: var(--space-2xl);
+  font-family: var(--font-body);
 }
 
-/* ── Subtle glass texture overlay ── */
-.footer::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(255,255,255,0.03) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(255,255,255,0.02) 0%, transparent 50%);
-  pointer-events: none;
+/* ── AI Legal Disclaimer ── */
+.footer__legal {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #6e6e73;
+  padding-bottom: var(--space-xl);
 }
 
-/* ── Decorative top edge — soft glow line ── */
-.footer__edge {
+.footer__legal p {
+  margin: 0;
+}
+
+/* ── Divider ── */
+.footer__divider {
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255,255,255,0.12) 20%, 
-    rgba(255,255,255,0.20) 50%, 
-    rgba(255,255,255,0.12) 80%, 
-    transparent 100%
-  );
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 /* ── Inner Layout ── */
@@ -44,8 +37,8 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-3xl);
-  padding-top: var(--space-3xl);
-  padding-bottom: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
 }
 
 /* ── Brand Section ── */
@@ -67,11 +60,8 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--snow);
+  background: #1d1d1f;
+  color: #ffffff;
   font-family: var(--font-headline);
   font-size: 1.1rem;
   font-weight: 700;
@@ -82,42 +72,14 @@
   font-family: var(--font-headline);
   font-size: var(--text-body-lg);
   font-weight: 600;
-  color: var(--snow);
+  color: #1d1d1f;
   letter-spacing: var(--tracking-tight);
 }
 
 .footer__tagline {
-  font-size: var(--text-body-sm);
-  color: var(--text-on-onyx-muted);
-  line-height: var(--leading-relaxed);
-  margin-bottom: var(--space-lg);
-}
-
-/* ── AI Badge ── */
-.footer__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-md);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-pill);
-}
-
-.footer__badge-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent-green);
-  border-radius: 50%;
-  animation: breathe 2s ease-in-out infinite;
-}
-
-.footer__badge-text {
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  font-weight: 500;
-  color: var(--text-on-onyx-muted);
-  letter-spacing: var(--tracking-wide);
+  font-size: 12px;
+  color: #6e6e73;
+  line-height: 1.6;
 }
 
 /* ── Link Columns ── */
@@ -134,74 +96,46 @@
 }
 
 .footer__col-title {
-  font-family: var(--font-body);
-  font-size: var(--text-overline);
-  font-weight: 700;
-  letter-spacing: var(--tracking-widest);
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f;
   margin-bottom: var(--space-xs);
 }
 
 .footer__link {
-  font-family: var(--font-body);
-  font-size: var(--text-body-sm);
+  font-size: 12px;
   font-weight: 400;
-  color: var(--text-on-onyx-muted);
+  color: #424245;
   text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-out-quad);
+  transition: color 0.2s;
 }
 
 .footer__link:hover {
-  color: var(--snow);
-  opacity: 1;
+  color: #1d1d1f;
+  text-decoration: underline;
 }
 
 .footer__link--muted {
   cursor: default;
-  opacity: 0.5;
+  color: #6e6e73;
 }
 
 .footer__link--muted:hover {
-  color: var(--text-on-onyx-muted);
+  text-decoration: none;
 }
 
 /* ── Bottom Bar ── */
 .footer__bottom {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: var(--space-lg);
-  padding-bottom: var(--space-lg);
-}
-
-.footer__bottom::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: var(--space-lg);
-  right: var(--space-lg);
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.08) 30%,
-    rgba(255, 255, 255, 0.08) 70%,
-    transparent 100%
-  );
+  padding-bottom: var(--space-xl);
 }
 
 .footer__copy {
-  font-size: var(--text-caption);
-  color: rgba(255, 255, 255, 0.30);
-}
-
-.footer__motto {
-  font-family: var(--font-headline);
-  font-size: var(--text-caption);
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: var(--tracking-wide);
+  font-size: 12px;
+  color: #6e6e73;
 }
 
 /* ── Responsive ── */
