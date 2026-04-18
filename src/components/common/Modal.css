@@ -1,0 +1,88 @@
+/* ============================================================
+   MODAL — Backdrop Blur Overlay
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn var(--duration-fast) var(--ease-out-quad) both;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  background-color: var(--snow-pure);
+  border-radius: var(--radius-super);
+  box-shadow: var(--shadow-lg), 0 0 80px rgba(0, 0, 0, 0.06);
+  animation: scaleIn var(--duration-normal) var(--ease-out-expo) both;
+  overflow: hidden;
+}
+
+/* ── Sizes ── */
+.modal--sm { max-width: 400px; }
+.modal--md { max-width: 560px; }
+.modal--lg { max-width: 720px; }
+
+/* ── Header ── */
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xl) var(--space-xl) 0;
+}
+
+.modal__title {
+  font-family: var(--font-headline);
+  font-size: var(--text-h4);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--snow-container-low);
+  border: none;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out-quad),
+    color var(--duration-fast) var(--ease-out-quad);
+}
+
+.modal__close:hover {
+  background-color: var(--snow-container-high);
+  color: var(--text-primary);
+}
+
+/* ── Body ── */
+.modal__body {
+  padding: var(--space-xl);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    border-radius: var(--radius-super) var(--radius-super) 0 0;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,148 @@
+/* ============================================================
+   BUTTON — Onyx & Snow Aesthetic
+   Pill-shaped, super-soft, ambient hover glow
+   ============================================================ */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    background-color var(--duration-normal) var(--ease-out-quad),
+    box-shadow var(--duration-normal) var(--ease-out-quad),
+    transform var(--duration-fast) var(--ease-out-quad),
+    opacity var(--duration-fast) var(--ease-out-quad);
+  outline: none;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Sizes ── */
+.btn--sm {
+  height: 36px;
+  padding: 0 var(--space-md);
+  font-size: var(--text-caption);
+}
+
+.btn--md {
+  height: 48px;
+  padding: 0 var(--space-xl);
+  font-size: var(--text-body-sm);
+}
+
+.btn--lg {
+  height: 56px;
+  padding: 0 var(--space-2xl);
+  font-size: var(--text-body);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+/* ── Primary: Solid Onyx with Monolith gradient ── */
+.btn--primary {
+  background: linear-gradient(135deg, var(--onyx) 0%, var(--onyx-dim) 100%);
+  color: var(--text-on-onyx);
+}
+
+.btn--primary:hover:not(:disabled) {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.20), 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Secondary: Surface container ── */
+.btn--secondary {
+  background-color: var(--snow-container-high);
+  color: var(--text-primary);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background-color: var(--snow-highest);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Ghost: Text only, underline on hover ── */
+.btn--ghost {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn--ghost .btn__label {
+  position: relative;
+}
+
+.btn--ghost .btn__label::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--onyx);
+  transition: width var(--duration-normal) var(--ease-out-expo);
+}
+
+.btn--ghost:hover:not(:disabled) .btn__label::after {
+  width: 100%;
+}
+
+/* ── Danger ── */
+.btn--danger {
+  background: linear-gradient(135deg, var(--accent-red) 0%, #c0392b 100%);
+  color: var(--snow-pure);
+}
+
+.btn--danger:hover:not(:disabled) {
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.25), 0 8px 32px rgba(231, 76, 60, 0.20);
+}
+
+/* ── Icon ── */
+.btn__icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.15em;
+}
+
+/* ── Loading Spinner ── */
+.btn--loading .btn__label {
+  opacity: 0;
+}
+
+.btn__spinner {
+  position: absolute;
+  display: inline-flex;
+}
+
+.btn__spinner-svg {
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn__spinner-svg circle {
+  stroke: currentColor;
+  stroke-dasharray: 44;
+  stroke-dashoffset: 16;
+  stroke-linecap: round;
+}

@@ -1,0 +1,128 @@
+/* ============================================================
+   INPUT — Minimalist Floating Label
+   Soft-tinted box → pure white on focus (Stitch pattern)
+   ============================================================ */
+
+.input-field {
+  position: relative;
+  width: 100%;
+}
+
+.input-field__control {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 400;
+  color: var(--text-primary);
+  background-color: var(--snow-container-low);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-lg) var(--space-xs);
+  outline: none;
+  transition:
+    background-color var(--duration-normal) var(--ease-out-quad),
+    box-shadow var(--duration-normal) var(--ease-out-quad);
+  resize: none;
+}
+
+/* Focus: transitions to pure white with ghost outline */
+.input-field__control:focus {
+  background-color: var(--snow-pure);
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.08), var(--shadow-sm);
+}
+
+/* ── Floating Label ── */
+.input-field__label {
+  position: absolute;
+  left: var(--space-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 400;
+  color: var(--text-tertiary);
+  pointer-events: none;
+  transition:
+    top var(--duration-normal) var(--ease-out-expo),
+    font-size var(--duration-normal) var(--ease-out-expo),
+    font-weight var(--duration-normal) var(--ease-out-expo),
+    color var(--duration-normal) var(--ease-out-expo);
+}
+
+/* Textarea label always starts at top */
+textarea.input-field__control ~ .input-field__label {
+  top: var(--space-lg);
+  transform: none;
+}
+
+/* Float up when focused or has value */
+.input-field--focused .input-field__label,
+.input-field--has-value .input-field__label {
+  top: var(--space-xs);
+  transform: none;
+  font-size: var(--text-overline);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Textarea float */
+.input-field--focused textarea.input-field__control ~ .input-field__label,
+.input-field--has-value textarea.input-field__control ~ .input-field__label {
+  top: var(--space-2xs);
+  font-size: var(--text-overline);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ── Bottom Highlight Bar ── */
+.input-field__highlight {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--onyx);
+  border-radius: var(--radius-pill);
+  transition: width var(--duration-normal) var(--ease-out-expo),
+              left var(--duration-normal) var(--ease-out-expo);
+}
+
+.input-field--focused .input-field__highlight {
+  width: calc(100% - var(--space-xl) * 2);
+  left: var(--space-xl);
+}
+
+/* ── Error State ── */
+.input-field--error .input-field__control {
+  box-shadow: 0 0 0 1.5px rgba(231, 76, 60, 0.3);
+}
+
+.input-field--error .input-field__highlight {
+  background-color: var(--accent-red);
+}
+
+.input-field__error {
+  display: block;
+  margin-top: var(--space-xs);
+  padding-left: var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--accent-red);
+}
+
+/* ── Disabled ── */
+.input-field--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── Textarea-specific ── */
+textarea.input-field__control {
+  padding-top: var(--space-xl);
+  line-height: var(--leading-relaxed);
+  min-height: 120px;
+}

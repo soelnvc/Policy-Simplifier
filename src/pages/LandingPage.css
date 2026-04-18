@@ -1,0 +1,96 @@
+/* ============================================================
+   LANDING PAGE — 3D HERO "ONYX" REDESIGN
+   ============================================================ */
+
+.landing-page {
+  background-color: #000000 !important;
+  color: var(--text-on-onyx) !important;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 1.5s var(--ease-out-expo);
+}
+
+/* ── Hero Section ── */
+.hero-3d {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centered layout */
+  padding: var(--navbar-height) var(--space-lg) 0;
+  z-index: var(--z-base);
+  overflow: hidden;
+  background-color: #000000 !important;
+}
+
+.hero-3d__content {
+  text-align: center;
+  z-index: 10;
+  max-width: 800px;
+  padding: 0 var(--space-lg);
+}
+
+.hero-3d__header {
+  margin-bottom: var(--space-md);
+  color: var(--snow-pure);
+  font-family: var(--font-headline);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  text-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.hero-3d__subheader {
+  color: var(--text-on-onyx-muted);
+  font-size: var(--text-body-lg);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ── Removed 3D Scene Container ── */
+.hero-3d__scene {
+  display: none;
+}
+
+/* ── The "Floor" Effect ── */
+/* This provides the ground plane visual reference from the attachment */
+.hero-3d__floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40vh;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(0, 0, 0, 0) 70%,
+    #000000 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Scroll Sections (Dark for now) ── */
+.landing-section {
+  padding: var(--space-5xl) 0;
+  background: var(--onyx);
+  color: var(--text-on-onyx);
+}
+
+.landing-section--light {
+  background: var(--snow);
+  color: var(--text-primary);
+}
+
+/* ── Loader ── */
+.spline-loader-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--snow-pure);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}

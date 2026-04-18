@@ -1,0 +1,83 @@
+/* ============================================================
+   CARD — Glassmorphic Containers (Stitch Layering)
+   No 1px borders. Boundaries via tonal shifts + glass.
+   ============================================================ */
+
+.card {
+  border-radius: var(--radius-super);
+  transition:
+    transform var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) var(--ease-out-expo);
+}
+
+.card--padded {
+  padding: var(--space-xl);
+}
+
+/* ── Glass: Frosted editorial panels ── */
+.card--glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Lifted: Pure white "floating" card on Snow surface ── */
+.card--lifted {
+  background-color: var(--snow-pure);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Surface: Subtle tonal shift, no perceived border ── */
+.card--surface {
+  background-color: var(--snow-container-low);
+}
+
+/* ── Onyx: The Monolith — dark premium card ── */
+.card--onyx {
+  background: linear-gradient(145deg, var(--onyx) 0%, var(--onyx-dim) 100%);
+  color: var(--text-on-onyx);
+}
+
+.card--onyx p,
+.card--onyx h1,
+.card--onyx h2,
+.card--onyx h3,
+.card--onyx h4 {
+  color: var(--text-on-onyx);
+}
+
+.card--onyx .text-caption,
+.card--onyx .text-overline {
+  color: var(--text-on-onyx-muted);
+}
+
+/* ── Hover effects ── */
+.card--hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card--clickable {
+  cursor: pointer;
+}
+
+/* ── Theme Main Integration ── */
+.theme-main .card {
+  background-color: var(--bg-container) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  border: none;
+}
+
+.theme-main .card--hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .card--padded {
+    padding: var(--space-lg);
+  }
+}

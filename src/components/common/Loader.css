@@ -1,0 +1,99 @@
+/* ============================================================
+   LOADER — Skeleton, Spinner & Pulsing Orb
+   ============================================================ */
+
+/* ── Skeleton Lines ── */
+.loader-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.loader-skeleton__line {
+  height: 14px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--snow-container) 25%,
+    var(--snow-container-high) 50%,
+    var(--snow-container) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ── Spinner ── */
+.loader-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-spinner__svg {
+  width: 32px;
+  height: 32px;
+  animation: spin 0.9s linear infinite;
+}
+
+.loader-spinner__svg circle {
+  stroke: var(--onyx);
+  stroke-dasharray: 90;
+  stroke-dashoffset: 30;
+  stroke-linecap: round;
+}
+
+/* ── Pulsing Orb ── */
+.loader-orb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.loader-orb__container {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.loader-orb__core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--onyx);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: breathe 2s ease-in-out infinite;
+}
+
+.loader-orb__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.12);
+  transform: translate(-50%, -50%);
+  animation: breathe 2s ease-in-out infinite;
+}
+
+.loader-orb__ring--outer {
+  width: 64px;
+  height: 64px;
+  animation-delay: 0ms;
+}
+
+.loader-orb__ring--middle {
+  width: 40px;
+  height: 40px;
+  animation-delay: 400ms;
+}
+
+.loader-orb__text {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: var(--tracking-wide);
+}

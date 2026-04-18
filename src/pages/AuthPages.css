@@ -1,0 +1,334 @@
+/* ============================================================
+   AUTH PAGES — Apple-Style Glassmorphism
+   B&W document background + frosted glass form card
+   ============================================================ */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  padding-top: var(--navbar-height);
+}
+
+.auth-page__container {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+/* ── Brand Panel (Left) ── */
+.auth-page__brand {
+  position: relative;
+  flex: 0 0 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  color: var(--snow);
+  overflow: hidden;
+  padding: var(--space-3xl);
+}
+
+.auth-page__brand-content {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-page__brand-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-on-onyx-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.auth-page__brand-heading {
+  font-family: var(--font-headline);
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
+  color: var(--snow);
+  margin-bottom: var(--space-lg);
+}
+
+.auth-page__brand-sub {
+  font-size: var(--text-body-lg);
+  color: var(--text-on-onyx-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* Decorative dots grid */
+.auth-page__brand-dots {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 200px;
+  height: 200px;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.7;
+}
+
+/* ── Form Panel (Right) — B&W Photo Background ── */
+.auth-page__form-panel {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  overflow: hidden;
+}
+
+/* B&W document background image */
+.auth-page__form-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/auth-bg.png');
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(100%) brightness(0.85) contrast(1.1);
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+/* Subtle dark overlay — keeps photo visible, adds cinematic tone */
+.auth-page__form-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+/* ── Glass Card — Maximum Refraction ── */
+.auth-page__card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-2xl) !important;
+
+  /* Heavy Glassmorphism — high refraction */
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(60px) saturate(1.8) brightness(1.15) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(1.8) brightness(1.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: var(--radius-super) !important;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.18),
+    0 2px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 0 80px rgba(255, 255, 255, 0.03) !important;
+}
+
+.auth-page__title {
+  font-family: var(--font-headline);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.auth-page__subtitle {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+}
+
+.auth-page__link {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--onyx);
+  transition: opacity var(--duration-fast) var(--ease-out-quad);
+}
+
+.auth-page__link:hover {
+  opacity: 0.7;
+}
+
+/* ── Error message ── */
+.auth-page__error {
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(231, 76, 60, 0.10);
+  backdrop-filter: blur(8px);
+  color: var(--accent-red);
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(231, 76, 60, 0.15);
+  margin-bottom: var(--space-lg);
+  animation: fadeIn var(--duration-fast) var(--ease-out-quad) both;
+}
+
+/* ── Form ── */
+.auth-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Glass-styled inputs — override base Input.css for glass context */
+.auth-page__form .input-field .input-field__control {
+  background: rgba(255, 255, 255, 0.28) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-top-color: rgba(255, 255, 255, 0.45) !important;
+  color: var(--text-primary);
+}
+
+.auth-page__form .input-field .input-field__control:focus {
+  background: rgba(255, 255, 255, 0.40) !important;
+  border-color: rgba(255, 255, 255, 0.50) !important;
+  border-top-color: rgba(255, 255, 255, 0.60) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Soften the highlight bar on glass */
+.auth-page__form .input-field .input-field__highlight {
+  background-color: rgba(255, 255, 255, 0.50);
+}
+
+/* Floating label — lighter on glass */
+.auth-page__form .input-field--focused .input-field__label,
+.auth-page__form .input-field--has-value .input-field__label {
+  color: var(--text-secondary);
+}
+
+/* Glass submit button */
+.auth-page__submit {
+  width: 100%;
+  margin-top: var(--space-sm);
+  background: rgba(26, 26, 26, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.auth-page__submit:hover {
+  background: rgba(26, 26, 26, 0.95) !important;
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.20),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── Divider ── */
+.auth-page__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.auth-page__divider::before,
+.auth-page__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.auth-page__divider span {
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Google Button — Glass variant ── */
+.auth-page__google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  border-top-color: rgba(255, 255, 255, 0.45);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition:
+    background-color var(--duration-fast) var(--ease-out-quad),
+    box-shadow var(--duration-fast) var(--ease-out-quad),
+    transform var(--duration-fast) var(--ease-out-quad);
+}
+
+.auth-page__google-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.auth-page__google-btn:active {
+  transform: scale(0.98);
+}
+
+.auth-page__google-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .auth-page__container {
+    flex-direction: column;
+  }
+
+  .auth-page__brand {
+    flex: none;
+    min-height: 260px;
+    padding: var(--space-2xl);
+  }
+
+  .auth-page__brand-heading {
+    font-size: 2.4rem;
+  }
+
+  .auth-page__form-panel {
+    padding: var(--space-xl) var(--space-lg);
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page__brand {
+    min-height: 200px;
+    padding: var(--space-xl);
+  }
+
+  .auth-page__brand-heading {
+    font-size: 1.8rem;
+  }
+
+  .auth-page__card {
+    padding: var(--space-lg) !important;
+  }
+}
