@@ -16,6 +16,7 @@ function Input({
   value,
   onChange,
   error = '',
+  helperText = '',
   placeholder = ' ',
   rows = 5,
   disabled = false,
@@ -67,6 +68,9 @@ function Input({
         <span id={`${id}-error`} className="input-field__error" role="alert">
           {error}
         </span>
+      )}
+      {helperText && !error && (
+        <span className="input-field__helper">{helperText}</span>
       )}
     </div>
   );
