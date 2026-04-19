@@ -1,0 +1,25 @@
+HEALTH PLUS GOLD POLICY
+Policy Holder: John Doe
+Issuer: Reliance Health Shield
+Policy Number: RHS-GOLD-5541
+Effective Date: 2025-06-01
+Expiry Date: 2026-05-31
+
+SUM INSURED: $300,000
+
+1. COVERAGE DETAILS:
+- Hospitalization: Covered up to $300,000.
+- ICU Charges: Capped at 2% of Sum Insured per day. (LIMIT detected)
+- Home Healthcare: Not covered.
+- Alternative Medicine (AYUSH): Covered up to $2,000.
+- Vision/Dental: 50% co-payment applies.
+
+2. EXCLUSIONS:
+- Pre-Existing Diseases: 48-month waiting period (longer than standard).
+- Alcohol-related injuries: Strictly excluded.
+- Maternity: 24-month waiting period applies.
+
+3. RISK FLAGS:
+- ICU Capping: Most hospitals charge $10,000+ for ICU, but this policy only pays $6,000/day. Huge out-of-pocket risk.
+- High PED Wait: 4 years is longer than most competitors.
+- Low Sum Insured: $300k might be insufficient for major surgeries in metropolitan areas.

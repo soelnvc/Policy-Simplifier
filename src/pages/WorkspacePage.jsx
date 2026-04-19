@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
 import { analyzePolicy, formatFileSize } from '../services/aiService';
+import { savePolicyAnalysis } from '../services/dbService';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Loader from '../components/common/Loader';
@@ -68,9 +69,18 @@ function WorkspacePage() {
         setProgress(p);
         setProgressLabel(label);
       });
+      
+      setProgress(99);
+      setProgressLabel('Saving to secure vault...');
+      if (user?.uid) {
+        await savePolicyAnalysis(user.uid, result);
+        addToast('Policy safely stored in your portfolio.', 'success');
+      } else {
+        addToast('Analysis completed. (Not saved, please log in)', 'info');
+      }
+
       setAnalysis(result);
       setState('results');
-      addToast('Analysis completed successfully.', 'success');
     } catch (err) {
       console.error(err);
       setError('Analysis failed. Please try again or check your document.');

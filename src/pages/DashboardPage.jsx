@@ -1,46 +1,113 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getUserPolicies } from '../services/dbService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import Loader from '../components/common/Loader';
 import './DashboardPage.css';
-
-/**
- * Dashboard data — starts empty. Will be populated from Firestore in production.
- */
-const EMPTY_DATA = {
-  stats: {
-    totalPolicies: 0,
-    avgCoverage: 0,
-    openRisks: 0,
-    totalSaved: '₹0',
-  },
-  portfolioScore: 0,
-  portfolioGrade: '—',
-  categoryBreakdown: [
-    { category: 'Health', score: 0, policies: 0, color: '#2ecc71', icon: '🛡️' },
-    { category: 'Motor', score: 0, policies: 0, color: '#3498db', icon: '🚗' },
-    { category: 'Home', score: 0, policies: 0, color: '#f39c12', icon: '🏠' },
-    { category: 'Life', score: 0, policies: 0, color: '#a1a1a6', icon: '❤️' },
-  ],
-  recentAnalyses: [],
-  topRisks: [],
-  premiumTimeline: [
-    { month: 'Jan', amount: 0 },
-    { month: 'Feb', amount: 0 },
-    { month: 'Mar', amount: 0 },
-    { month: 'Apr', amount: 0 },
-    { month: 'May', amount: 0 },
-    { month: 'Jun', amount: 0 },
-  ],
-};
 
 function DashboardPage() {
   const { user } = useAuth();
-  const [data] = useState(EMPTY_DATA);
+  const [policies, setPolicies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const firstName = user?.displayName?.split(' ')[0] || 'there';
 
-  const isEmpty = data.stats.totalPolicies === 0;
+  useEffect(() => {
+    async function loadData() {
+      if (!user?.uid) return;
+      try {
+        const data = await getUserPolicies(user.uid);
+        setPolicies(data);
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [user]);
+
+  // Derived Statistics
+  const data = useMemo(() => {
+    if (!policies || policies.length === 0) return null;
+
+    let totalScore = 0;
+    let totalRisks = 0;
+    const allRisks = [];
+    const typeCount = { Health: 0, Auto: 0, Home: 0, Life: 0, Other: 0 };
+    const typeScore = { Health: 0, Auto: 0, Home: 0, Life: 0, Other: 0 };
+
+    policies.forEach(p => {
+      totalScore += (p.coverageScore || 0);
+      
+      const risks = p.riskFlags || [];
+      totalRisks += risks.length;
+      risks.forEach(r => allRisks.push({ ...r, policyName: p.policyOverview?.name }));
+
+      let cType = p.policyOverview?.type || 'Other';
+      if (cType.toLowerCase().includes('health') || cType.toLowerCase().includes('medical')) cType = 'Health';
+      else if (cType.toLowerCase().includes('auto') || cType.toLowerCase().includes('motor') || cType.toLowerCase().includes('car')) cType = 'Auto';
+      else if (cType.toLowerCase().includes('home') || cType.toLowerCase().includes('property')) cType = 'Home';
+      else if (cType.toLowerCase().includes('life')) cType = 'Life';
+      else cType = 'Other';
+
+      if (!typeCount[cType]) {
+        typeCount[cType] = 0;
+        typeScore[cType] = 0;
+      }
+      typeCount[cType]++;
+      typeScore[cType] += (p.coverageScore || 0);
+    });
+
+    const avgCoverage = Math.round(totalScore / policies.length);
+    let grade = '—';
+    if (avgCoverage >= 80) grade = 'A';
+    else if (avgCoverage >= 60) grade = 'B';
+    else if (avgCoverage >= 40) grade = 'C';
+    else grade = 'F';
+
+    // Sort risks (Critical -> Warning -> Info)
+    const severityMap = { critical: 3, warning: 2, info: 1 };
+    allRisks.sort((a, b) => severityMap[b.level] - severityMap[a.level]);
+
+    // Categories Breakdown
+    const categories = [
+      { category: 'Health', color: '#2ecc71', icon: '🛡️' },
+      { category: 'Auto', color: '#3498db', icon: '🚗' },
+      { category: 'Home', color: '#f39c12', icon: '🏠' },
+      { category: 'Life', color: '#a1a1a6', icon: '❤️' },
+    ].map(cat => ({
+      ...cat,
+      policies: typeCount[cat.category] || 0,
+      score: typeCount[cat.category] > 0 ? Math.round(typeScore[cat.category] / typeCount[cat.category]) : 0
+    }));
+
+    return {
+      stats: {
+        totalPolicies: policies.length,
+        avgCoverage,
+        openRisks: totalRisks,
+        totalSaved: '₹0', // Requires deeper financial mock/model, keeping static
+      },
+      portfolioScore: avgCoverage,
+      portfolioGrade: grade,
+      categoryBreakdown: categories,
+      recentAnalyses: policies.slice(0, 5),
+      topRisks: allRisks.slice(0, 4),
+    };
+  }, [policies]);
+
+  if (loading) {
+    return (
+      <div className="theme-main page-content page-enter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
+        <Loader variant="orb" />
+      </div>
+    );
+  }
+
+  const isEmpty = !data;
 
   return (
     <div className="theme-main page-content page-enter">
@@ -131,22 +198,18 @@ function DashboardPage() {
                 <Card variant="lifted" className="dashboard__stat-card">
                   <p className="dashboard__stat-label">Policies Analyzed</p>
                   <p className="dashboard__stat-value">{data.stats.totalPolicies}</p>
-                  <p className="dashboard__stat-change dashboard__stat-change--up">+1 this month</p>
                 </Card>
                 <Card variant="lifted" className="dashboard__stat-card">
                   <p className="dashboard__stat-label">Avg. Coverage</p>
                   <p className="dashboard__stat-value">{data.stats.avgCoverage}%</p>
-                  <p className="dashboard__stat-change">across all policies</p>
                 </Card>
                 <Card variant="lifted" className="dashboard__stat-card">
                   <p className="dashboard__stat-label">Open Risks</p>
                   <p className="dashboard__stat-value dashboard__stat-value--risk">{data.stats.openRisks}</p>
-                  <p className="dashboard__stat-change dashboard__stat-change--down">needs attention</p>
                 </Card>
                 <Card variant="lifted" className="dashboard__stat-card">
                   <p className="dashboard__stat-label">Est. Savings Found</p>
                   <p className="dashboard__stat-value dashboard__stat-value--green">{data.stats.totalSaved}</p>
-                  <p className="dashboard__stat-change dashboard__stat-change--up">from gap analysis</p>
                 </Card>
               </div>
 
@@ -212,27 +275,6 @@ function DashboardPage() {
                       ))}
                     </div>
                   </Card>
-
-                  {/* Premium Timeline */}
-                  <Card variant="lifted" className="dashboard__timeline-card">
-                    <p className="text-overline" style={{ marginBottom: 'var(--space-lg)' }}>PREMIUM TIMELINE</p>
-                    <div className="dashboard__chart">
-                      {data.premiumTimeline.map((point) => (
-                        <div key={point.month} className="dashboard__chart-bar-wrap">
-                          <div className="dashboard__chart-bar">
-                            <div
-                              className="dashboard__chart-fill"
-                              style={{ height: `${(point.amount / (Math.max(...data.premiumTimeline.map(d => d.amount), 1))) * 100}%` }}
-                            />
-                          </div>
-                          <span className="dashboard__chart-label">{point.month}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="dashboard__chart-note">
-                      Total annual premiums: <strong>₹0</strong>
-                    </p>
-                  </Card>
                 </div>
 
                 {/* Right Column */}
@@ -252,21 +294,21 @@ function DashboardPage() {
                               <circle
                                 cx="18" cy="18" r="15"
                                 fill="none"
-                                stroke={analysis.score >= 80 ? '#2ecc71' : analysis.score >= 60 ? '#f39c12' : '#e74c3c'}
+                                stroke={analysis.coverageScore >= 80 ? '#2ecc71' : analysis.coverageScore >= 60 ? '#f39c12' : '#e74c3c'}
                                 strokeWidth="3"
                                 strokeLinecap="round"
-                                strokeDasharray={`${(analysis.score / 100) * 94.2} 94.2`}
+                                strokeDasharray={`${((analysis.coverageScore || 0) / 100) * 94.2} 94.2`}
                                 transform="rotate(-90 18 18)"
                               />
                             </svg>
-                            <span className="dashboard__mini-score">{analysis.score}</span>
+                            <span className="dashboard__mini-score">{analysis.coverageScore || 0}</span>
                           </div>
                           <div className="dashboard__recent-info">
-                            <p className="dashboard__recent-name">{analysis.name}</p>
-                            <p className="dashboard__recent-meta">{analysis.type} · {analysis.date}</p>
+                            <p className="dashboard__recent-name">{analysis.policyOverview?.name || 'Unknown Policy'}</p>
+                            <p className="dashboard__recent-meta">{analysis.policyOverview?.type || 'Standard'} · {analysis.capturedDate || 'Recent'}</p>
                           </div>
-                          {analysis.risks > 0 && (
-                            <span className="dashboard__recent-risks">{analysis.risks} risks</span>
+                          {(analysis.riskFlags?.length || 0) > 0 && (
+                            <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
                           )}
                         </div>
                       ))}
@@ -276,17 +318,21 @@ function DashboardPage() {
                   {/* Top Risk Alerts */}
                   <Card variant="lifted" className="dashboard__risks-card">
                     <p className="text-overline" style={{ marginBottom: 'var(--space-md)' }}>TOP RISK ALERTS</p>
-                    <div className="dashboard__risk-list">
-                      {data.topRisks.map((risk, i) => (
-                        <div key={i} className={`dashboard__risk-item dashboard__risk-item--${risk.level}`}>
-                          <span className="dashboard__risk-dot" />
-                          <div className="dashboard__risk-info">
-                            <p className="dashboard__risk-flag">{risk.flag}</p>
-                            <p className="dashboard__risk-policy">{risk.policy}</p>
+                    {data.topRisks.length === 0 ? (
+                      <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>No major risks detected across your portfolio!</p>
+                    ) : (
+                      <div className="dashboard__risk-list">
+                        {data.topRisks.map((risk, i) => (
+                          <div key={i} className={`dashboard__risk-item dashboard__risk-item--${risk.level}`}>
+                            <span className="dashboard__risk-dot" />
+                            <div className="dashboard__risk-info">
+                              <p className="dashboard__risk-flag">{risk.flag}</p>
+                              <p className="dashboard__risk-policy">{risk.policyName}</p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </Card>
 
                   {/* Quick Actions */}

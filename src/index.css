@@ -624,3 +624,14 @@ a:hover {
   font-weight: 600;
   letter-spacing: 0.1em;
 }
+
+/* ── Snap Scroll Global Enforcement ── */
+body.snap-scroll-active,
+html.snap-scroll-active {
+  scroll-snap-type: y mandatory;
+}
+
+body.snap-scroll-active #root > footer {
+  scroll-snap-align: end;
+  scroll-snap-stop: always;
+}
