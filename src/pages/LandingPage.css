@@ -200,23 +200,7 @@
   pointer-events: none;
 }
 
-/* ── Integrated Content (Inside Circle) ── */
-.hero-integrated-content {
-  position: absolute;
-  bottom: 12%; /* Align to the top-left quadrant of the large circle */
-  right: 12%;
-  max-width: 500px;
-  text-align: right;
-  pointer-events: auto;
-}
-
-.hero-integrated-content h1 {
-  font-size: var(--text-h2);
-  margin: 0;
-  line-height: 1;
-  color: var(--snow);
-  text-shadow: 0 0 40px rgba(0,0,0,1); /* Deepen contrast against sequence */
-}
+/* Integrated Content removed as per request */
 
 .hero-integrated-content p {
   font-size: var(--text-body);
@@ -230,33 +214,30 @@
 /* ── The Accent Circle (Shared Decor) ── */
 .hero-accent-circle {
   position: absolute;
-  bottom: -400px; /* Center point at bottom-right corner */
-  right: -400px;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 75%, transparent 100%);
+  bottom: -250px;
+  right: -250px;
+  width: 500px;
+  height: 500px;
   background-color: var(--onyx-rich);
+  border: 2px solid var(--snow);
   border-radius: 50%;
   z-index: 8;
   pointer-events: none;
-  box-shadow: -40px -40px 150px rgba(0, 0, 0, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.03); /* Subtle architectural edge */
 }
 
 /* Mirror circle for Screen 2 transition */
 .shared-circle-screen2 {
   position: absolute;
-  top: -400px;
-  right: -400px;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 75%, transparent 100%);
+  top: -250px;
+  right: -250px;
+  width: 500px;
+  height: 500px;
   background-color: var(--onyx-rich);
+  border: 2px solid var(--snow);
   border-radius: 50%;
   z-index: 8;
   pointer-events: none;
-  box-shadow: -40px 40px 150px rgba(0, 0, 0, 0.95);
-  opacity: 0.8; /* Slightly softer in Screen 2 */
+  opacity: 0.6;
 }
 
 /* Hide old placeholder logic once we have the sequence */

@@ -44,15 +44,8 @@ function LandingPage() {
             extension="webp"
           />
 
-          {/* Accent Circle (Hides watermark + Holds Title) */}
-          <div className="hero-accent-circle">
-            <div className="hero-integrated-content">
-              <RevealBlock direction="up" delayClass="delay-300">
-                <h1>Policy Simplifier</h1>
-                <p>Clarity for the common man.</p>
-              </RevealBlock>
-            </div>
-          </div>
+          {/* Accent Circle (Hides watermark + Architectural Border) */}
+          <div className="hero-accent-circle" />
         </div>
       </section>
 
