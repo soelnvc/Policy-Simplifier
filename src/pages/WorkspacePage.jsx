@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { analyzePolicy, formatFileSize } from '../services/mockAnalysisService';
+import { useToast } from '../context/ToastContext';
+import { analyzePolicy, formatFileSize } from '../services/aiService';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Loader from '../components/common/Loader';
@@ -12,6 +13,7 @@ import './WorkspacePage.css';
  */
 function WorkspacePage() {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [state, setState] = useState('upload'); // 'upload' | 'processing' | 'results'
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
@@ -68,8 +70,11 @@ function WorkspacePage() {
       });
       setAnalysis(result);
       setState('results');
+      addToast('Analysis completed successfully.', 'success');
     } catch (err) {
-      setError('Analysis failed. Please try again.');
+      console.error(err);
+      setError('Analysis failed. Please try again or check your document.');
+      addToast('Failed to analyze document via AI.', 'error');
       setState('upload');
     }
   };

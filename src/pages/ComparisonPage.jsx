@@ -1,7 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { analyzePolicy, formatFileSize } from '../services/mockAnalysisService';
+import { useToast } from '../context/ToastContext';
+import { analyzePolicy, formatFileSize } from '../services/aiService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import './ComparisonPage.css';
@@ -12,6 +13,7 @@ import './ComparisonPage.css';
  */
 function ComparisonPage() {
   const { user } = useAuth();
+  const { addToast } = useToast();
 
   // Two policy slots
   const [policyA, setPolicyA] = useState({ file: null, analysis: null });
@@ -46,15 +48,22 @@ function ComparisonPage() {
     setComparing(true);
     setShowResults(false);
 
-    const [resultA, resultB] = await Promise.all([
-      analyzePolicy(policyA.file, (p, l) => setProgress(prev => ({ ...prev, a: p })) || setProgressLabel(prev => ({ ...prev, a: l }))),
-      analyzePolicy(policyB.file, (p, l) => setProgress(prev => ({ ...prev, b: p })) || setProgressLabel(prev => ({ ...prev, b: l }))),
-    ]);
+    try {
+      const [resultA, resultB] = await Promise.all([
+        analyzePolicy(policyA.file, (p, l) => setProgress(prev => ({ ...prev, a: p })) || setProgressLabel(prev => ({ ...prev, a: l }))),
+        analyzePolicy(policyB.file, (p, l) => setProgress(prev => ({ ...prev, b: p })) || setProgressLabel(prev => ({ ...prev, b: l }))),
+      ]);
 
-    setPolicyA(prev => ({ ...prev, analysis: resultA }));
-    setPolicyB(prev => ({ ...prev, analysis: resultB }));
-    setComparing(false);
-    setShowResults(true);
+      setPolicyA(prev => ({ ...prev, analysis: resultA }));
+      setPolicyB(prev => ({ ...prev, analysis: resultB }));
+      addToast('Comparison completed successfully.', 'success');
+      setComparing(false);
+      setShowResults(true);
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to analyze documents. Please try again.', 'error');
+      setComparing(false);
+    }
   };
 
   const startOver = () => {
