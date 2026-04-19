@@ -170,26 +170,100 @@
   color: var(--text-on-onyx-muted);
 }
 
-/* ── Hero Specific ── */
-.hero-snap {
-  flex-direction: column;
-  text-align: center;
+/* ── Hero Specific: Cinematic Sequence Track ── */
+.hero-track {
+  height: 400vh; /* Giving enough "scrolling room" for 192 frames */
+  position: relative;
+  scroll-snap-align: start; /* Magnetic snap locks to the TOP of the track */
 }
 
-.hero-placeholder {
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   width: 100%;
-  max-width: 800px;
-  height: 40vh;
-  margin-top: var(--space-2xl);
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-on-onyx-muted);
-  font-size: var(--text-h4);
+  overflow: hidden;
+  background-color: var(--onyx-rich);
 }
+
+.hero-snap__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Integrated Content (Inside Circle) ── */
+.hero-integrated-content {
+  position: absolute;
+  bottom: 12%; /* Align to the top-left quadrant of the large circle */
+  right: 12%;
+  max-width: 500px;
+  text-align: right;
+  pointer-events: auto;
+}
+
+.hero-integrated-content h1 {
+  font-size: var(--text-h2);
+  margin: 0;
+  line-height: 1;
+  color: var(--snow);
+  text-shadow: 0 0 40px rgba(0,0,0,1); /* Deepen contrast against sequence */
+}
+
+.hero-integrated-content p {
+  font-size: var(--text-body);
+  color: var(--text-on-onyx-muted);
+  margin-top: var(--space-sm);
+  text-shadow: 0 0 20px rgba(0,0,0,1);
+}
+
+/* ── Removed Glass Badge (Integrated into circle now) ── */
+
+/* ── The Accent Circle (Shared Decor) ── */
+.hero-accent-circle {
+  position: absolute;
+  bottom: -400px; /* Center point at bottom-right corner */
+  right: -400px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 75%, transparent 100%);
+  background-color: var(--onyx-rich);
+  border-radius: 50%;
+  z-index: 8;
+  pointer-events: none;
+  box-shadow: -40px -40px 150px rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.03); /* Subtle architectural edge */
+}
+
+/* Mirror circle for Screen 2 transition */
+.shared-circle-screen2 {
+  position: absolute;
+  top: -400px;
+  right: -400px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 75%, transparent 100%);
+  background-color: var(--onyx-rich);
+  border-radius: 50%;
+  z-index: 8;
+  pointer-events: none;
+  box-shadow: -40px 40px 150px rgba(0, 0, 0, 0.95);
+  opacity: 0.8; /* Slightly softer in Screen 2 */
+}
+
+/* Hide old placeholder logic once we have the sequence */
+.hero-placeholder {
+  display: none;
+}
+
 
 /* Responsive Overrides */
 @media (max-width: 1024px) {

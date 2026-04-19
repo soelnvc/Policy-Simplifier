@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import ScrollSequence from '../components/animation/ScrollSequence';
 import Button from '../components/common/Button';
 import './LandingPage.css';
 
@@ -33,30 +34,33 @@ function LandingPage() {
   return (
     <div className="landing-page">
       
-      {/* ── SCREEN 1: HERO ── */}
-      <section className="snap-section hero-snap">
-        <div className="container">
-          <RevealBlock direction="up" delayClass="delay-100">
-            <h1 className="landing-headline">
-              Policy <br /> Simplifier
-            </h1>
-          </RevealBlock>
-          <RevealBlock direction="up" delayClass="delay-200">
-            <p className="landing-subheadline" style={{ margin: '0 auto var(--space-xl)' }}>
-              Creative 3D Look with a Robot in background and Title in Front
-            </p>
-          </RevealBlock>
-          
-          <RevealBlock direction="up" delayClass="delay-300">
-            <div className="hero-placeholder">
-              <span>[ 3D Spline Scene Placeholder ]</span>
+      {/* ── SCREEN 1: HERO (Cinematic Sequence) ── */}
+      <section className="hero-track">
+        <div className="hero-sticky">
+          {/* The Animation Engine */}
+          <ScrollSequence 
+            frameCount={82} 
+            path="/web_sequence/animation_policy_"
+            extension="webp"
+          />
+
+          {/* Accent Circle (Hides watermark + Holds Title) */}
+          <div className="hero-accent-circle">
+            <div className="hero-integrated-content">
+              <RevealBlock direction="up" delayClass="delay-300">
+                <h1>Policy Simplifier</h1>
+                <p>Clarity for the common man.</p>
+              </RevealBlock>
             </div>
-          </RevealBlock>
+          </div>
         </div>
       </section>
 
       {/* ── SCREEN 2: THE PROBLEM ── */}
       <section className="snap-section">
+        {/* Mirror Circle for Shared Decor Effect */}
+        <div className="shared-circle-screen2" />
+        
         <div className="container section-grid">
           <RevealBlock direction="left" delayClass="delay-100">
             <p className="text-overline" style={{ color: 'var(--accent-red)', marginBottom: 'var(--space-sm)' }}>THE PROBLEM</p>
