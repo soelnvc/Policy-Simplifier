@@ -14,7 +14,13 @@
 
   <br />
 
-  <video src="./public/Demo.mov" width="80%" autoplay loop muted playsinline style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.5);"></video>
+  <div align="center">
+    <a href="public/Demo.mov" target="_blank">
+      <img src="public/hero_preview.png" width="90%" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.6);" alt="Hero Preview" />
+      <br/><br/>
+      <img src="https://img.shields.io/badge/🎬%20Watch%20Demo%20Video-white?style=for-the-badge" alt="Watch Demo" />
+    </a>
+  </div>
 </div>
 
 <br />
@@ -47,7 +53,11 @@
 A dark-mode optimized, cinematic workspace environment where users upload their documents. Leveraging native CSS drag-and-drop and real-time visual feedback, the workspace parses documents and immediately transitions into an interactive, multi-tabbed breakdown (Coverage, Risks, and Terms).
 
 ### 📈 Intelligent Dashboard & Portfolio
-Users build an active portfolio of analyzed policies. The application dynamically calculates an average **Portfolio Health Score**, counting open risks and grouping policies by type (Auto, Health, Home, Life). 
+Users build an active portfolio of analyzed policies. The application dynamically calculates an average **Portfolio Health Score**, counting open risks and grouping policies by type (Auto, Health, Home, Life).
+
+<br/>
+<img src="public/dashboard_preview.png" width="100%" style="border-radius: 12px; border: 1px solid var(--border-light); margin: 20px 0;" alt="Dashboard Preview" />
+<br/>
 
 ### 🔖 Universal Bookmark System
 A highly optimized state-management approach allows users to instantly bookmark ("Favorite") critical analyses. Marked insights bypass firestore re-querying directly into a unified **"Saved Insights"** tracking hub within the centralized settings.
