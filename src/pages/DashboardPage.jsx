@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { getUserPolicies } from '../services/dbService';
+import { useToast } from '../context/ToastContext';
+import { getUserPolicies, deletePolicyAnalysis } from '../services/dbService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
@@ -9,8 +10,29 @@ import './DashboardPage.css';
 
 function DashboardPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { addToast } = useToast();
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const handleDeleteAnalysis = async (e, policyId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!window.confirm("Are you sure you want to remove this policy from your portfolio?")) return;
+    
+    try {
+      await deletePolicyAnalysis(user.uid, policyId);
+      setPolicies(prev => prev.filter(p => p.id !== policyId));
+      addToast('Policy safely removed from your portfolio.', 'success');
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to delete policy.', 'error');
+    }
+  };
+
+  const handleViewPolicy = (policy) => {
+    navigate('/workspace', { state: { policy } });
+  };
 
   const firstName = user?.displayName?.split(' ')[0] || 'there';
 
@@ -283,11 +305,15 @@ function DashboardPage() {
                   <Card variant="lifted" className="dashboard__recent-card">
                     <div className="dashboard__recent-header">
                       <p className="text-overline">RECENT ANALYSES</p>
-                      <Link to="/workspace" className="dashboard__see-all">View all</Link>
+                      <Link to="/policies" className="dashboard__see-all">View all</Link>
                     </div>
                     <div className="dashboard__recent-list">
                       {data.recentAnalyses.map((analysis) => (
-                        <div key={analysis.id} className="dashboard__recent-item">
+                        <div 
+                          key={analysis.id} 
+                          className="dashboard__recent-item dashboard__recent-item--clickable"
+                          onClick={() => handleViewPolicy(analysis)}
+                        >
                           <div className="dashboard__recent-score-ring">
                             <svg viewBox="0 0 36 36" className="dashboard__mini-dial">
                               <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="3" />
@@ -307,9 +333,20 @@ function DashboardPage() {
                             <p className="dashboard__recent-name">{analysis.policyOverview?.name || 'Unknown Policy'}</p>
                             <p className="dashboard__recent-meta">{analysis.policyOverview?.type || 'Standard'} · {analysis.capturedDate || 'Recent'}</p>
                           </div>
-                          {(analysis.riskFlags?.length || 0) > 0 && (
-                            <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
-                          )}
+                          <div className="dashboard__recent-actions">
+                            {(analysis.riskFlags?.length || 0) > 0 && (
+                              <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
+                            )}
+                            <button 
+                              className="dashboard__recent-delete"
+                              onClick={(e) => handleDeleteAnalysis(e, analysis.id)}
+                              aria-label="Delete analysis"
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>

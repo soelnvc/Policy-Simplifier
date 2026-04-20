@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import ScrollSequence from "../components/animation/ScrollSequence";
 import SplineScene from "../components/common/SplineScene";
@@ -112,6 +113,17 @@ function UnderstandingGapGraphic() {
 }
 
 function LandingPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/workspace');
+    } else {
+      navigate('/login');
+    }
+  };
+
   // Enforce Dark Page Context & Scroll Snap natively on the HTML element
   useEffect(() => {
     document.body.classList.add("is-dark-page");
@@ -137,6 +149,13 @@ function LandingPage() {
 
           {/* Accent Circle (Hides watermark + Architectural Border) */}
           <div className="hero-accent-circle" />
+
+          {/* Glassmorphed Get Started Button */}
+          <div className="hero-action-container">
+            <button className="hero-glass-btn" onClick={handleGetStarted}>
+              Get Started
+            </button>
+          </div>
         </div>
       </section>
 

@@ -25,6 +25,7 @@ import DashboardPage from './pages/DashboardPage';
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const AllPoliciesPage = lazy(() => import('./pages/AllPoliciesPage'));
 
 /**
  * Suspense fallback — centered pulsing orb loader.
@@ -58,6 +59,9 @@ function App() {
                 } />
                 <Route path="/dashboard" element={
                   <ProtectedRoute><DashboardPage /></ProtectedRoute>
+                } />
+                <Route path="/policies" element={
+                  <ProtectedRoute><AllPoliciesPage /></ProtectedRoute>
                 } />
                 <Route path="/compare" element={
                   <ProtectedRoute><ComparisonPage /></ProtectedRoute>

@@ -29,35 +29,33 @@ function Navbar() {
           title: 'Actions',
           links: [
             { label: 'New Analysis', path: '/workspace', desc: 'Start a new policy breakdown' },
-            { label: 'My Drafts', path: '/workspace', desc: 'Resume saved work' },
-            { label: 'Recent Work', path: '/workspace', desc: 'Quick access to latest results' },
           ]
         },
         {
-          title: 'Advanced Tools',
+          title: 'Analysis Features',
           links: [
-            { label: 'Risk Profiler', path: '/workspace', desc: 'Identify hidden liabilities' },
-            { label: 'Coverage Map', path: '/workspace', desc: 'Visual landscape of protection' },
+            { label: 'Coverage Breakdown', path: '/workspace', desc: "See exactly what is and isn't covered" },
+            { label: 'Risk Identification', path: '/workspace', desc: 'Spot hidden dangers in fine print' },
+            { label: 'Jargon Decoder', path: '/workspace', desc: 'Translate legal terms into plain English' },
           ]
         }
       ]
     },
     dashboard: {
-      header: 'Market Insights',
+      header: 'Portfolio Insights',
       columns: [
         {
           title: 'Analytics',
           links: [
-            { label: 'Overview', path: '/dashboard', desc: 'High-level performance metrics' },
-            { label: 'Premium Trends', path: '/dashboard', desc: 'Historical cost analysis' },
-            { label: 'Risk Scorecard', path: '/dashboard', desc: 'Comparative safety ratings' },
+            { label: 'Portfolio Overview', path: '/dashboard', desc: 'High-level performance metrics and score' },
+            { label: 'Category Breakdown', path: '/dashboard', desc: 'Health, Auto, Home, and Life segments' },
           ]
         },
         {
           title: 'Reports',
           links: [
-            { label: 'Export Data', path: '/dashboard', desc: 'PDF and CSV summaries' },
-            { label: 'Saved Insights', path: '/dashboard', desc: 'Bookmarked observations' },
+            { label: 'Critical Risks', path: '/dashboard', desc: 'Top vulnerabilities across all policies' },
+            { label: 'Recent Analyses', path: '/policies', desc: 'Quickly access your latest policy data' },
           ]
         }
       ]
@@ -68,8 +66,7 @@ function Navbar() {
         {
           title: 'Engines',
           links: [
-            { label: 'Side-by-Side', path: '/compare', desc: 'Direct clause comparison' },
-            { label: 'Market Benchmark', path: '/compare', desc: 'Compare against industry standards' },
+            { label: 'Side-by-Side Comparison', path: '/compare', desc: 'Directly compare two policies clause-by-clause' },
           ]
         }
       ]

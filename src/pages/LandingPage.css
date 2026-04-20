@@ -249,6 +249,44 @@
   pointer-events: none;
 }
 
+/* ── Hero Get Started Button ── */
+.hero-action-container {
+  position: absolute;
+  bottom: 80px; /* Positions it nicely at the bottom center visually */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  pointer-events: auto; /* Essential to break out of any pointer-events none */
+}
+
+.hero-glass-btn {
+  background: rgba(255, 255, 255, 0.05); /* Extremely sheer base */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Architectural thin border */
+  color: var(--snow);
+  font-family: var(--font-headline);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 16px 48px;
+  border-radius: var(--radius-pill); /* Pill shaped */
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+.hero-glass-btn:hover {
+  background: rgba(255, 255, 255, 0.1); /* Brighter on hover */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+.hero-glass-btn:active {
+  transform: translateY(1px);
+}
+
 /* Mirror circle for Screen 2 transition */
 .shared-circle-screen2 {
   position: absolute;

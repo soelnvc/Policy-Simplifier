@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
 import { analyzePolicy, formatFileSize } from '../services/aiService';
@@ -14,6 +15,7 @@ import './WorkspacePage.css';
  */
 function WorkspacePage() {
   const { user } = useAuth();
+  const location = useLocation();
   const { addToast } = useToast();
   const [state, setState] = useState('upload'); // 'upload' | 'processing' | 'results'
   const [file, setFile] = useState(null);
@@ -26,6 +28,14 @@ function WorkspacePage() {
   const fileInputRef = useRef(null);
 
   const firstName = user?.displayName?.split(' ')[0] || 'there';
+
+  // ── Auto-load saved policy from navigation state ──
+  useEffect(() => {
+    if (location.state?.policy) {
+      setAnalysis(location.state.policy);
+      setState('results');
+    }
+  }, [location.state]);
 
   // ── File Handling ──
   const handleFile = useCallback((selectedFile) => {
