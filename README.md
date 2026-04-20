@@ -11,6 +11,10 @@
     <a href="#architecture"><img src="https://img.shields.io/badge/Built%20With-React%2019-61dafb?style=for-the-badge&logo=react" alt="React"/></a>
     <a href="#ui-engineering"><img src="https://img.shields.io/badge/3D-Spline%20Integration-ff0055?style=for-the-badge&logo=spline" alt="Spline"/></a>
   </p>
+
+  <br />
+
+  <video src="./public/Demo.mov" width="80%" autoplay loop muted playsinline style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.5);"></video>
 </div>
 
 <br />
