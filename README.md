@@ -32,6 +32,7 @@
 ---
 
 ## 📖 Table of Contents
+
 - [The Problem vs. The Solution](#-the-problem-vs-the-solution)
 - [Key Features](#-key-features)
 - [Stunning UX & UI Engineering](#-stunning-ux--ui-engineering)
@@ -43,7 +44,7 @@
 
 ## 🎯 The Problem vs. The Solution
 
-**The Problem:** Over 90% of consumers experience an "Understanding Gap" when buying insurance. They guess what is covered. Consequently, 1 in 4 insurance claims faces delays or outright rejection due to hidden clauses and archaic jargon. 
+**The Problem:** Over 90% of consumers experience an "Understanding Gap" when buying insurance. They guess what is covered. Consequently, 1 in 4 insurance claims faces delays or outright rejection due to hidden clauses and archaic jargon.
 
 **The Solution:** Policy Simplifier takes uploaded documents (PDFs, Images, Text) and pipes them through Google's cutting-edge **Gemini 3.1 Flash-Lite AI** engine. Within seconds, it breaks the policy down into a highly readable summary, generates a custom Coverage Score out of 100, and explicitly red-flags hidden risks.
 
@@ -52,9 +53,11 @@
 ## ⚡ Key Features
 
 ### 🧠 Cinematic AI Workspace
+
 A dark-mode optimized, cinematic workspace environment where users upload their documents. Leveraging native CSS drag-and-drop and real-time visual feedback, the workspace parses documents and immediately transitions into an interactive, multi-tabbed breakdown (Coverage, Risks, and Terms).
 
 ### 📈 Intelligent Dashboard & Portfolio
+
 Users build an active portfolio of analyzed policies. The application dynamically calculates an average **Portfolio Health Score**, counting open risks and grouping policies by type (Auto, Health, Home, Life).
 
 <br/>
@@ -62,6 +65,7 @@ Users build an active portfolio of analyzed policies. The application dynamicall
 <br/>
 
 ### 🔖 Universal Bookmark System
+
 A highly optimized state-management approach allows users to instantly bookmark ("Favorite") critical analyses. Marked insights bypass firestore re-querying directly into a unified **"Saved Insights"** tracking hub within the centralized settings.
 
 ---
@@ -70,25 +74,27 @@ A highly optimized state-management approach allows users to instantly bookmark 
 
 Policy Simplifier avoids generic UI frameworks (like Material or Bootstrap) in favor of a strictly bespoke, highly-engineered frontend architecture:
 
-*   **Cinematic WebP Scroll Sequencing:** The landing page features a buttery-smooth, Apple-inspired scroll animation engine that scrubs through 82 highly compressed `.webp` frames dynamically tied to the user's scroll percentage.
-*   **Spline 3D Integration:** A sophisticated 3D robot scene, rendered natively in the browser via `@splinetool/react-spline`. We engineered intentional UI masking to seamlessly blend the 3D environment with our proprietary DOM structure.
-*   **Magnetic CSS Snap-Scrolling:** Taking advantage of modern CSS `scroll-snap-type: y mandatory`, bounding sections into immersive, full viewport experiences without heavy JS libraries.
-*   **Advanced Glassmorphism:** Employing intricate CSS architectures `backdrop-filter: blur(16px)` and variable structural Opacities to simulate frosted architectural glass overlaying deep Onyx backgrounds. 
-*   **Dynamic SVG Dials:** Circular progress metrics map raw user-data natively to `stroke-dasharray` values, driving engaging radial loading animations organically across all Dashboards and Policy Cards.
-*   **Seamless Page Transitions:** Leveraging **Framer Motion** and strategic React `<Suspense />` wrappers to allow soft-fades between high-fidelity layouts, preventing abrupt flashes of unstyled content.
+- **Cinematic WebP Scroll Sequencing:** The landing page features a buttery-smooth, Apple-inspired scroll animation engine that scrubs through 82 highly compressed `.webp` frames dynamically tied to the user's scroll percentage.
+- **Spline 3D Integration:** A sophisticated 3D robot scene, rendered natively in the browser via `@splinetool/react-spline`. We engineered intentional UI masking to seamlessly blend the 3D environment with our proprietary DOM structure.
+- **Magnetic CSS Snap-Scrolling:** Taking advantage of modern CSS `scroll-snap-type: y mandatory`, bounding sections into immersive, full viewport experiences without heavy JS libraries.
+- **Advanced Glassmorphism:** Employing intricate CSS architectures `backdrop-filter: blur(16px)` and variable structural Opacities to simulate frosted architectural glass overlaying deep Onyx backgrounds.
+- **Dynamic SVG Dials:** Circular progress metrics map raw user-data natively to `stroke-dasharray` values, driving engaging radial loading animations organically across all Dashboards and Policy Cards.
+- **Seamless Page Transitions:** Leveraging **Framer Motion** and strategic React `<Suspense />` wrappers to allow soft-fades between high-fidelity layouts, preventing abrupt flashes of unstyled content.
 
 ---
 
 ## 🛠️ The Tech Stack
 
 ### Core Frontend
-*   **React 19** (Vite Engine) - Lightning-fast HMR and optimized production bundling.
-*   **React Router v6** - Protected routing arrays with local storage authentication gates.
-*   **Vanilla CSS3 (Bespoke)** - utilizing advanced CSS variables methodology based on custom design tokens (referred to structurally as *The Stitch Design System*).
+
+- **React 19** (Vite Engine) - Lightning-fast HMR and optimized production bundling.
+- **React Router v6** - Protected routing arrays with local storage authentication gates.
+- **Vanilla CSS3 (Bespoke)** - utilizing advanced CSS variables methodology based on custom design tokens (referred to structurally as _The Stitch Design System_).
 
 ### AI & Backend Services
-*   **Google Gemini AI API** (`gemini-3.1-flash-lite-preview`) - Orchestrating the heavy lifting for OCR capabilities and deep semantic context digestion of legal documentation.
-*   **Firebase & Firestore** - Managing lightweight, heavily indexed NoSQL user graphs. Document schemas rely on scalable JSON payload structures rather than relational bloat.
+
+- **Google Gemini AI API** (`gemini-3.1-flash-lite-preview`) - Orchestrating the heavy lifting for OCR capabilities and deep semantic context digestion of legal documentation.
+- **Firebase & Firestore** - Managing lightweight, heavily indexed NoSQL user graphs. Document schemas rely on scalable JSON payload structures rather than relational bloat.
 
 ---
 
@@ -145,6 +151,7 @@ A glimpse into our scalable structural directory:
  ┃ ┣ 📜 authService.js    # Firebase Auth wrappers
  ┃ ┣ 📜 firebase.js       # Core initialization
  ┃ ┗ 📜 mockAnalysis.js   # Testing & Development data
+ ┣ 📂 mock data           # Sample policy .txt files for testing
  ┗ 📜 App.jsx             # The Main Router & Gatekeeper
 ```
 
