@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/splinetool/react-spline/main/logo.png" alt="Policy Simplifier Logo" width="120" />
   <h1>🛡️ Policy Simplifier (Antigravity Edition)</h1>
 
   <p>
