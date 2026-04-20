@@ -6,6 +6,7 @@ import { useToast } from '../context/ToastContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
+import ConfirmModal from '../components/common/ConfirmModal';
 import './AllPoliciesPage.css';
 
 function AllPoliciesPage() {
@@ -14,6 +15,7 @@ function AllPoliciesPage() {
   const { addToast } = useToast();
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, policyId: null });
 
   useEffect(() => {
     async function loadData() {
@@ -31,10 +33,15 @@ function AllPoliciesPage() {
     loadData();
   }, [user, addToast]);
 
-  const handleDelete = async (e, policyId) => {
+  const initiateDelete = (e, policyId) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!window.confirm("Are you sure you want to permanently delete this policy?")) return;
+    setConfirmModal({ isOpen: true, policyId });
+  };
+
+  const executeDelete = async () => {
+    const policyId = confirmModal.policyId;
+    if (!policyId) return;
     
     try {
       await deletePolicyAnalysis(user.uid, policyId);
@@ -43,6 +50,8 @@ function AllPoliciesPage() {
     } catch (err) {
       console.error(err);
       addToast('Failed to delete policy.', 'error');
+    } finally {
+      setConfirmModal({ isOpen: false, policyId: null });
     }
   };
 
@@ -134,7 +143,7 @@ function AllPoliciesPage() {
                   </button>
                   <button 
                     className="all-policies__delete"
-                    onClick={(e) => handleDelete(e, policy.id)}
+                    onClick={(e) => initiateDelete(e, policy.id)}
                     aria-label="Delete policy"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -159,6 +168,15 @@ function AllPoliciesPage() {
           ))}
         </div>
       )}
+
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        title="Permanently Delete Policy"
+        message="Are you sure you want to completely remove this policy? This action cannot be undone and will affect your overall portfolio stats."
+        confirmText="Delete Policy"
+        onConfirm={executeDelete}
+        onCancel={() => setConfirmModal({ isOpen: false, policyId: null })}
+      />
     </div>
   );
 }

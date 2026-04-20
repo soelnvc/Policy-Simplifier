@@ -6,6 +6,7 @@ import { getUserPolicies, deletePolicyAnalysis } from '../services/dbService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
+import ConfirmModal from '../components/common/ConfirmModal';
 import './DashboardPage.css';
 
 function DashboardPage() {
@@ -14,11 +15,17 @@ function DashboardPage() {
   const { addToast } = useToast();
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, policyId: null });
 
-  const handleDeleteAnalysis = async (e, policyId) => {
+  const initiateDelete = (e, policyId) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!window.confirm("Are you sure you want to remove this policy from your portfolio?")) return;
+    setConfirmModal({ isOpen: true, policyId });
+  };
+
+  const executeDelete = async () => {
+    const policyId = confirmModal.policyId;
+    if (!policyId) return;
     
     try {
       await deletePolicyAnalysis(user.uid, policyId);
@@ -27,6 +34,8 @@ function DashboardPage() {
     } catch (err) {
       console.error(err);
       addToast('Failed to delete policy.', 'error');
+    } finally {
+      setConfirmModal({ isOpen: false, policyId: null });
     }
   };
 
@@ -339,7 +348,7 @@ function DashboardPage() {
                             )}
                             <button 
                               className="dashboard__recent-delete"
-                              onClick={(e) => handleDeleteAnalysis(e, analysis.id)}
+                              onClick={(e) => initiateDelete(e, analysis.id)}
                               aria-label="Delete analysis"
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -402,6 +411,15 @@ function DashboardPage() {
           )}
         </div>
       </div>
+
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        title="Remove Policy"
+        message="Are you sure you want to remove this policy from your portfolio? This action is permanent and cannot be undone."
+        confirmText="Remove Policy"
+        onConfirm={executeDelete}
+        onCancel={() => setConfirmModal({ isOpen: false, policyId: null })}
+      />
     </div>
   );
 }
