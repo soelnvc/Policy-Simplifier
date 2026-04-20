@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
 import { analyzePolicy, formatFileSize } from '../services/aiService';
-import { savePolicyAnalysis } from '../services/dbService';
+import { savePolicyAnalysis, toggleFavoritePolicy } from '../services/dbService';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Loader from '../components/common/Loader';
@@ -81,15 +81,15 @@ function WorkspacePage() {
       });
       
       setProgress(99);
-      setProgressLabel('Saving to secure vault...');
+      let firestoreId = null;
       if (user?.uid) {
-        await savePolicyAnalysis(user.uid, result);
+        firestoreId = await savePolicyAnalysis(user.uid, result);
         addToast('Policy safely stored in your portfolio.', 'success');
       } else {
         addToast('Analysis completed. (Not saved, please log in)', 'info');
       }
 
-      setAnalysis(result);
+      setAnalysis({ ...result, id: firestoreId, isFavorite: false });
       setState('results');
     } catch (err) {
       console.error(err);
@@ -106,6 +106,23 @@ function WorkspacePage() {
     setAnalysis(null);
     setError('');
     setActiveTab('coverage');
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!user || !analysis?.id) {
+      addToast('Cannot favorite without an account or saved policy.', 'error');
+      return;
+    }
+    
+    const newStatus = !analysis.isFavorite;
+    try {
+      await toggleFavoritePolicy(user.uid, analysis.id, newStatus);
+      setAnalysis(prev => ({ ...prev, isFavorite: newStatus }));
+      addToast(newStatus ? 'Added to your favorites.' : 'Removed from your favorites.', 'success');
+    } catch (err) {
+      console.error("Failed to toggle favorite", err);
+      addToast('Failed to update favorite status.', 'error');
+    }
   };
 
   // ── Render ──
@@ -129,13 +146,27 @@ function WorkspacePage() {
               )}
             </div>
             {state === 'results' && (
-              <Button variant="secondary" onClick={startOver} icon={
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-                </svg>
-              }>
-                New Analysis
-              </Button>
+              <div className="workspace__actions-group" style={{ display: 'flex', gap: '8px' }}>
+                {analysis?.id && (
+                  <Button 
+                    variant="outline" 
+                    onClick={handleToggleFavorite}
+                    style={{ padding: '0 12px' }}
+                    aria-label={analysis.isFavorite ? "Remove from saved" : "Save this policy"}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill={analysis.isFavorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: analysis.isFavorite ? 'var(--accent-green)' : 'currentColor' }}>
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </Button>
+                )}
+                <Button variant="secondary" onClick={startOver} icon={
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                  </svg>
+                }>
+                  New Analysis
+                </Button>
+              </div>
             )}
           </div>
 

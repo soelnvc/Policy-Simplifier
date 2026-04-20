@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { getUserPolicies, deletePolicyAnalysis } from '../services/dbService';
+import { getUserPolicies, deletePolicyAnalysis, toggleFavoritePolicy } from '../services/dbService';
 import { useToast } from '../context/ToastContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -43,6 +43,21 @@ function AllPoliciesPage() {
     } catch (err) {
       console.error(err);
       addToast('Failed to delete policy.', 'error');
+    }
+  };
+
+  const handleToggleFavorite = async (e, policy) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newStatus = !policy.isFavorite;
+    
+    try {
+      await toggleFavoritePolicy(user.uid, policy.id, newStatus);
+      setPolicies(prev => prev.map(p => p.id === policy.id ? { ...p, isFavorite: newStatus } : p));
+      addToast(newStatus ? 'Added to your favorites.' : 'Removed from your favorites.', 'success');
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to update favorite status.', 'error');
     }
   };
 
@@ -90,7 +105,7 @@ function AllPoliciesPage() {
                 <div className="all-policies__score-wrap">
                   <div className="all-policies__score-ring">
                     <svg viewBox="0 0 48 48" className="all-policies__dial">
-                      <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
+                      <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="4" />
                       <circle
                         cx="24" cy="24" r="20"
                         fill="none"
@@ -106,16 +121,27 @@ function AllPoliciesPage() {
                     <span className="all-policies__type">{policy.policyOverview?.type || 'Standard'}</span>
                   </div>
                 </div>
-                
-                <button 
-                  className="all-policies__delete"
-                  onClick={(e) => handleDelete(e, policy.id)}
-                  aria-label="Delete policy"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                </button>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button 
+                    className="all-policies__delete"
+                    onClick={(e) => handleToggleFavorite(e, policy)}
+                    aria-label={policy.isFavorite ? "Remove from saved" : "Save this policy"}
+                    style={{ color: policy.isFavorite ? 'var(--accent-green)' : 'var(--text-tertiary)' }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill={policy.isFavorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    className="all-policies__delete"
+                    onClick={(e) => handleDelete(e, policy.id)}
+                    aria-label="Delete policy"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               <div className="all-policies__info">

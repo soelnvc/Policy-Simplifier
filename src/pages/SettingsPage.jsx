@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getFavoritePolicies, toggleFavoritePolicy } from '../services/dbService';
 import { useToast } from '../context/ToastContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -36,8 +38,41 @@ function SettingsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState('');
 
-  // Saved policies (mock empty state)
-  const [savedPolicies] = useState([]);
+  // Saved (Favorite) policies
+  const navigate = useNavigate();
+  const [favoritePolicies, setFavoritePolicies] = useState([]);
+  const [loadingFavorites, setLoadingFavorites] = useState(true);
+
+  // Fetch Favorites
+  useEffect(() => {
+    async function fetchFavs() {
+      if (!user?.uid) return;
+      try {
+        const favs = await getFavoritePolicies(user.uid);
+        setFavoritePolicies(favs);
+      } catch (err) {
+        console.error("Failed fetching favorites", err);
+      } finally {
+        setLoadingFavorites(false);
+      }
+    }
+    fetchFavs();
+  }, [user]);
+
+  const handleUnfavorite = async (e, policyId) => {
+    e.stopPropagation();
+    try {
+      await toggleFavoritePolicy(user.uid, policyId, false);
+      setFavoritePolicies(prev => prev.filter(p => p.id !== policyId));
+      addToast('Removed from favorites.', 'info');
+    } catch (err) {
+      addToast('Failed to update.', 'error');
+    }
+  };
+
+  const handleViewPolicy = (policy) => {
+    navigate('/workspace', { state: { policy } });
+  };
 
   const userInitial = user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U';
 
@@ -228,25 +263,39 @@ function SettingsPage() {
                 </Card>
               </section>
 
-              {/* ─── Saved Policies Section ─── */}
+              {/* ─── Favorite Policies Section ─── */}
               <section id="policies">
                 <Card variant="lifted" className="settings__card">
                   <div className="settings__card-header">
-                    <h2 className="settings__card-title">Saved Policies</h2>
-                    <p className="settings__card-desc">Manage your analyzed policy documents.</p>
+                    <h2 className="settings__card-title">Saved Insights</h2>
+                    <p className="settings__card-desc">Your bookmarked policy analyses for quick access.</p>
                   </div>
 
-                  {savedPolicies.length === 0 ? (
+                  {loadingFavorites ? (
+                    <div className="settings__empty" style={{ padding: '2rem 0' }}>Loading your favorites...</div>
+                  ) : favoritePolicies.length === 0 ? (
                     <div className="settings__empty">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                      <p className="settings__empty-title">No saved policies</p>
-                      <p className="settings__empty-desc">Policies you analyze will appear here for easy access.</p>
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+                      <p className="settings__empty-title">No saved insights</p>
+                      <p className="settings__empty-desc">Bookmark an analysis in the Workspace to access it here.</p>
                     </div>
                   ) : (
-                    <div className="settings__policies-list">
-                      {savedPolicies.map((p, i) => (
-                        <div key={i} className="settings__policy-item">
-                          <span>{p.name}</span>
+                    <div className="settings__policies-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+                      {favoritePolicies.map((p) => (
+                        <div 
+                          key={p.id} 
+                          className="settings__policy-item" 
+                          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border-light)', cursor: 'pointer' }}
+                          onClick={() => handleViewPolicy(p)}
+                          title="Click to view full analysis"
+                        >
+                          <div>
+                            <p style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>{p.policyOverview?.name || 'Saved Policy'}</p>
+                            <p style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>Coverage Score: {p.coverageScore}</p>
+                          </div>
+                          <Button variant="ghost" onClick={(e) => handleUnfavorite(e, p.id)} style={{ color: 'var(--accent-red)' }} aria-label="Remove from favorites">
+                             Remove
+                          </Button>
                         </div>
                       ))}
                     </div>
