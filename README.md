@@ -15,11 +15,13 @@
   <br />
 
   <div align="center">
-    <a href="public/Demo.mov" target="_blank">
-      <img src="public/hero_preview.png" width="90%" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.6);" alt="Hero Preview" />
-      <br/><br/>
-      <img src="https://img.shields.io/badge/🎬%20Watch%20Demo%20Video-white?style=for-the-badge" alt="Watch Demo" />
-    </a>
+    <img src="public/demo.gif" width="90%" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.6);" alt="Policy Simplifier Demo" />
+    <br/><br/>
+    <p>
+      <a href="public/Demo.mov" target="_blank">
+        <img src="https://img.shields.io/badge/🎬%20Watch%20Full%204K%20Demo-white?style=for-the-badge" alt="Full Demo" />
+      </a>
+    </p>
   </div>
 </div>
 
