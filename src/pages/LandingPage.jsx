@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import ScrollSequence from "../components/animation/ScrollSequence";
+import SplineScene from "../components/common/SplineScene";
 import Button from "../components/common/Button";
 import "./LandingPage.css";
 
@@ -181,8 +182,13 @@ function LandingPage() {
       <section className="snap-section">
         <div className="container section-grid">
           <RevealBlock direction="left" delayClass="delay-200">
-            <div className="placeholder-box">
-              <span>[ Cool animation of AI ]</span>
+            <div className="spline-container-mask">
+              <SplineScene scene="https://prod.spline.design/5r0R1IdHYuhH74Zs/scene.splinecode" />
+              {/* Decorative AI indicator covering the watermark */}
+              <div className="spline-watermark-mask">
+                <span className="ai-dot" />
+                <span className="ai-label">AI</span>
+              </div>
             </div>
           </RevealBlock>
 
@@ -258,7 +264,7 @@ function LandingPage() {
                   className="landing-subheadline"
                   style={{ fontSize: "var(--text-body)" }}
                 >
-                  Wait 5 seconds for Gemini AI to process the document.
+                  Wait 5 seconds for AI to process the document.
                 </p>
               </div>
               <div style={{ display: "flex", gap: "var(--space-md)" }}>
