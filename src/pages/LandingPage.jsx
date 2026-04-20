@@ -282,8 +282,17 @@ function LandingPage() {
           </RevealBlock>
 
           <RevealBlock direction="right" delayClass="delay-200">
-            <div className="placeholder-box">
-              <span>[ Demo Video of use ]</span>
+            <div className="demo-video-container">
+              <video 
+                src="/Demo.mov" 
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                className="demo-video-player"
+              />
+              {/* Subtle glass overlay for consistency */}
+              <div className="demo-video-overlay" />
             </div>
           </RevealBlock>
         </div>

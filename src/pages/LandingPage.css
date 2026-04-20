@@ -539,6 +539,41 @@
   width: 100%;
 }
 
+/* ── Demo Video Container (Screen 4) ── */
+.demo-video-container {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--onyx-soft);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.demo-video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.demo-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.1) 0%,
+    rgba(10, 10, 10, 0) 50%,
+    rgba(10, 10, 10, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* ── Spline Container & Watermark Mask ── */
 .spline-container-mask {
   position: relative;

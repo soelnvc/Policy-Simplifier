@@ -148,9 +148,9 @@ export async function analyzePolicy(file, onProgress) {
     onProgress?.(50, 'Analyzing clauses and fine print...');
     
     // We use gemini-1.5-flash as it supports massive contexts (PDFs) and is extremely fast
-    // Switching to gemini-2.5-flash as requested by user
+    // Switching to gemini-3.1-flash-lite-preview as requested by user for testing
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.1-flash-lite-preview",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: policyAnalysisSchema,
