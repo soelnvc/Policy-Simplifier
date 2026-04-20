@@ -128,19 +128,24 @@ A glimpse into our scalable structural directory:
  ┃ ┣ 📂 animation         # Scroll sequence engines and layout transitions
  ┃ ┣ 📂 common            # Buttons, Cards, Modals, Spline wrappers
  ┃ ┗ 📂 layout            # Adaptive Mega-Menus, Navigations, and Footers
- ┣ 📂 context             # Unified State Management (Toasts, Auth Context)
+ ┣ 📂 context             # State Management (AuthContext, ToastContext)
  ┣ 📂 hooks               # Custom React Hooks (useAuth, useScrollReveal)
- ┣ 📂 pages               # High-level route entries
- ┃ ┣ 📜 LandingPage.jsx   # The Cinematic entry point
- ┃ ┣ 📜 WorkspacePage.jsx # AI Engine Upload/Results
- ┃ ┣ 📜 DashboardPage.jsx # The Portfolio Analytics hub
- ┃ ┣ 📜 AllPoliciesPage.jsx
- ┃ ┗ 📜 SettingsPage.jsx
- ┣ 📂 services            # External Integrations
- ┃ ┣ 📜 aiService.js      # The Gemini payload structuring engine
- ┃ ┣ 📜 dbService.js      # Robust abstract Firestore interactions
- ┃ ┗ 📜 firebase.js
- ┗ 📜 App.jsx             # The centralized Routing and Auth Wrapper
+ ┣ 📂 pages               # High-level entry points
+ ┃ ┣ 📜 LandingPage.jsx   # Hero entrance & Scroll Sequences
+ ┃ ┣ 📜 WorkspacePage.jsx # AI Engine & Analysis Results
+ ┃ ┣ 📜 DashboardPage.jsx # Portfolio Overview & Stats
+ ┃ ┣ 📜 ComparisonPage.jsx # Multi-policy risk comparison
+ ┃ ┣ 📜 AllPoliciesPage.jsx # Grid-based portfolio management
+ ┃ ┣ 📜 SettingsPage.jsx  # Preferences & Saved Insights
+ ┃ ┣ 📜 ProfilePage.jsx   # User identity & account management
+ ┃ ┗ 📜 Auth (Login/Signup)
+ ┣ 📂 services            # Business & AI Logic
+ ┃ ┣ 📜 aiService.js      # Gemini Semantic Engine
+ ┃ ┣ 📜 dbService.js      # Firestore Interaction layer
+ ┃ ┣ 📜 authService.js    # Firebase Auth wrappers
+ ┃ ┣ 📜 firebase.js       # Core initialization
+ ┃ ┗ 📜 mockAnalysis.js   # Testing & Development data
+ ┗ 📜 App.jsx             # The Main Router & Gatekeeper
 ```
 
 <div align="center">
