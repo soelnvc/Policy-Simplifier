@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import ScrollSequence from '../components/animation/ScrollSequence';
-import Button from '../components/common/Button';
-import './LandingPage.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useScrollReveal } from "../hooks/useScrollReveal";
+import ScrollSequence from "../components/animation/ScrollSequence";
+import Button from "../components/common/Button";
+import "./LandingPage.css";
 
 // Reusable component to handle the scroll reveal logic cleanly
-function RevealBlock({ children, direction = 'up', className = '', delayClass = '', style = {} }) {
+function RevealBlock({
+  children,
+  direction = "up",
+  className = "",
+  delayClass = "",
+  style = {},
+}) {
   const { ref, isVisible } = useScrollReveal();
   return (
-    <div 
-      ref={ref} 
-      className={`reveal-${direction} ${delayClass} ${isVisible ? 'is-visible' : ''} ${className}`}
+    <div
+      ref={ref}
+      className={`reveal-${direction} ${delayClass} ${isVisible ? "is-visible" : ""} ${className}`}
       style={style}
     >
       {children}
@@ -19,27 +25,111 @@ function RevealBlock({ children, direction = 'up', className = '', delayClass = 
   );
 }
 
+// Higher-end graphic for Claim Rejection Reality
+function ClaimRejectionGraphic() {
+  const { ref, isVisible } = useScrollReveal();
+
+  return (
+    <div
+      ref={ref}
+      className={`claim-reality-graphic reveal-graphic ${isVisible ? "is-visible" : ""}`}
+    >
+      <div className="claim-reality-header">
+        <h3>1 in 4 ❌</h3>
+        <p style={{ fontSize: "var(--text-body-sm)" }}>
+          health insurance claims in India face delays or rejection.
+        </p>
+      </div>
+
+      <div className="claim-grid">
+        <div className="claim-card"></div>
+        <div className="claim-card"></div>
+        <div className="claim-card"></div>
+        <div className="claim-card claim-card--rejected"></div>
+      </div>
+    </div>
+  );
+}
+
+// 90% Understanding Gap Graphic
+function UnderstandingGapGraphic() {
+  const { ref, isVisible } = useScrollReveal();
+  const [isClicked, setIsClicked] = useState(false);
+  const [displayCount, setDisplayCount] = useState(0);
+
+  useEffect(() => {
+    if (isVisible) {
+      let start = 0;
+      const end = 90;
+      const duration = 2000; // Match CSS transition
+      const increment = 1;
+      const stepTime = duration / end;
+
+      const timer = setInterval(() => {
+        start += 1;
+        if (start <= end) {
+          setDisplayCount(start);
+        } else {
+          clearInterval(timer);
+        }
+      }, stepTime);
+
+      return () => clearInterval(timer);
+    } else {
+      setDisplayCount(0);
+    }
+  }, [isVisible]);
+  
+  return (
+    <div 
+      ref={ref} 
+      className={`understanding-gap-graphic reveal-graphic ${isVisible ? 'is-visible' : ''}`}
+      onClick={() => setIsClicked(!isClicked)}
+    >
+      <div className="gauge-container">
+        <svg className="gauge-svg" viewBox="0 0 120 120">
+          <circle className="gauge-bg" cx="60" cy="60" r="50" />
+          {/* Base Yellow Layer */}
+          <circle className="gauge-fill" cx="60" cy="60" r="50" />
+          {/* Interactive Blue Overlay Layer */}
+          <circle 
+            className={`gauge-fill gauge-fill--blue ${isClicked ? 'is-active' : ''}`} 
+            cx="60" cy="60" r="50" 
+          />
+        </svg>
+        <div className="gauge-text" style={{ color: isClicked ? '#00d2ff' : 'var(--snow)', transition: 'color 0.5s' }}>
+          {displayCount}%
+        </div>
+      </div>
+      
+      <div className="gap-info">
+        <h4>Understanding Gap</h4>
+        <p>Most people are guessing what they’re covered for.</p>
+      </div>
+    </div>
+  );
+}
+
 function LandingPage() {
   // Enforce Dark Page Context & Scroll Snap natively on the HTML element
   useEffect(() => {
-    document.body.classList.add('is-dark-page');
-    document.documentElement.classList.add('snap-scroll-active');
-    
+    document.body.classList.add("is-dark-page");
+    document.documentElement.classList.add("snap-scroll-active");
+
     return () => {
-      document.body.classList.remove('is-dark-page');
-      document.documentElement.classList.remove('snap-scroll-active');
+      document.body.classList.remove("is-dark-page");
+      document.documentElement.classList.remove("snap-scroll-active");
     };
   }, []);
 
   return (
     <div className="landing-page">
-      
       {/* ── SCREEN 1: HERO (Cinematic Sequence) ── */}
       <section className="hero-track">
         <div className="hero-sticky">
           {/* The Animation Engine */}
-          <ScrollSequence 
-            frameCount={82} 
+          <ScrollSequence
+            frameCount={82}
             path="/web_sequence/animation_policy_"
             extension="webp"
           />
@@ -53,19 +143,35 @@ function LandingPage() {
       <section className="snap-section">
         {/* Mirror Circle for Shared Decor Effect */}
         <div className="shared-circle-screen2" />
-        
+
         <div className="container section-grid">
           <RevealBlock direction="left" delayClass="delay-100">
-            <p className="text-overline" style={{ color: 'var(--accent-red)', marginBottom: 'var(--space-sm)' }}>THE PROBLEM</p>
-            <h2 className="landing-headline" style={{ fontSize: 'var(--text-h1)' }}>Defining the problem</h2>
+            <p
+              className="text-overline"
+              style={{
+                color: "var(--accent-red)",
+                marginBottom: "var(--space-sm)",
+              }}
+            >
+              THE PROBLEM
+            </p>
+            <h2
+              className="landing-headline"
+              style={{ fontSize: "var(--text-h1)" }}
+            >
+              Defining the problem
+            </h2>
             <p className="landing-subheadline">
-              Insurance companies bury their exclusions, limits, and traps deep inside 40-page PDF documents full of archaic legal jargon. When tragedy strikes, people find out they aren't actually covered.
+              Insurance companies bury their exclusions, limits, and traps deep
+              inside 40-page PDF documents full of archaic legal jargon. When
+              tragedy strikes, people find out they aren't actually covered.
             </p>
           </RevealBlock>
-          
+
           <RevealBlock direction="right" delayClass="delay-200">
-            <div className="placeholder-box">
-              <span>[ Image defining statistics how people suffer ]</span>
+            <div className="problem-graphics-stack">
+              <ClaimRejectionGraphic />
+              <UnderstandingGapGraphic />
             </div>
           </RevealBlock>
         </div>
@@ -81,10 +187,26 @@ function LandingPage() {
           </RevealBlock>
 
           <RevealBlock direction="right" delayClass="delay-100">
-            <p className="text-overline" style={{ color: 'var(--accent-green)', marginBottom: 'var(--space-sm)' }}>THE SOLUTION</p>
-            <h2 className="landing-headline" style={{ fontSize: 'var(--text-h1)' }}>How we are solving it</h2>
+            <p
+              className="text-overline"
+              style={{
+                color: "var(--accent-green)",
+                marginBottom: "var(--space-sm)",
+              }}
+            >
+              THE SOLUTION
+            </p>
+            <h2
+              className="landing-headline"
+              style={{ fontSize: "var(--text-h1)" }}
+            >
+              How we are solving it
+            </h2>
             <p className="landing-subheadline">
-              Our neural engine instantly reads the entire policy, extracting hidden limits, mapping exact coverage scores, and flagging critical dangers—transforming an unreadable contract into an editorial dashboard.
+              Our neural engine instantly reads the entire policy, extracting
+              hidden limits, mapping exact coverage scores, and flagging
+              critical dangers—transforming an unreadable contract into an
+              editorial dashboard.
             </p>
           </RevealBlock>
         </div>
@@ -94,20 +216,61 @@ function LandingPage() {
       <section className="snap-section">
         <div className="container section-grid">
           <RevealBlock direction="left" delayClass="delay-100">
-            <p className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 'var(--space-sm)' }}>WORKFLOW</p>
-            <h2 className="landing-headline" style={{ fontSize: 'var(--text-h1)' }}>How to use</h2>
-            <div style={{ marginTop: 'var(--space-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
-              <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
-                <span style={{ fontSize: '1.5rem', color: 'var(--snow)' }}>1.</span>
-                <p className="landing-subheadline" style={{ fontSize: 'var(--text-body)' }}>Drag and drop your insurance PDF into the secure portal.</p>
+            <p
+              className="text-overline"
+              style={{
+                color: "var(--text-tertiary)",
+                marginBottom: "var(--space-sm)",
+              }}
+            >
+              WORKFLOW
+            </p>
+            <h2
+              className="landing-headline"
+              style={{ fontSize: "var(--text-h1)" }}
+            >
+              How to use
+            </h2>
+            <div
+              style={{
+                marginTop: "var(--space-lg)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--space-md)",
+              }}
+            >
+              <div style={{ display: "flex", gap: "var(--space-md)" }}>
+                <span style={{ fontSize: "1.5rem", color: "var(--snow)" }}>
+                  1.
+                </span>
+                <p
+                  className="landing-subheadline"
+                  style={{ fontSize: "var(--text-body)" }}
+                >
+                  Drag and drop your insurance PDF into the secure portal.
+                </p>
               </div>
-              <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
-                <span style={{ fontSize: '1.5rem', color: 'var(--snow)' }}>2.</span>
-                <p className="landing-subheadline" style={{ fontSize: 'var(--text-body)' }}>Wait 5 seconds for Gemini AI to process the document.</p>
+              <div style={{ display: "flex", gap: "var(--space-md)" }}>
+                <span style={{ fontSize: "1.5rem", color: "var(--snow)" }}>
+                  2.
+                </span>
+                <p
+                  className="landing-subheadline"
+                  style={{ fontSize: "var(--text-body)" }}
+                >
+                  Wait 5 seconds for Gemini AI to process the document.
+                </p>
               </div>
-              <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
-                <span style={{ fontSize: '1.5rem', color: 'var(--snow)' }}>3.</span>
-                <p className="landing-subheadline" style={{ fontSize: 'var(--text-body)' }}>Review your generated risk dashboard and coverage score.</p>
+              <div style={{ display: "flex", gap: "var(--space-md)" }}>
+                <span style={{ fontSize: "1.5rem", color: "var(--snow)" }}>
+                  3.
+                </span>
+                <p
+                  className="landing-subheadline"
+                  style={{ fontSize: "var(--text-body)" }}
+                >
+                  Review your generated risk dashboard and coverage score.
+                </p>
               </div>
             </div>
           </RevealBlock>
@@ -122,10 +285,23 @@ function LandingPage() {
 
       {/* ── SCREEN 5: CAPABILITIES & FOOTER ALIGNMENT ── */}
       <section className="snap-section snap-section--auto">
-        <div className="container" style={{ paddingBottom: 'var(--space-4xl)' }}>
-          <RevealBlock direction="up" delayClass="delay-100" className="text-center" style={{ textAlign: 'center' }}>
-            <h2 className="landing-headline" style={{ fontSize: 'var(--text-h2)' }}>Rest of the functionalities and perks</h2>
-            <p className="landing-subheadline" style={{ margin: '0 auto' }}>
+        <div
+          className="container"
+          style={{ paddingBottom: "var(--space-4xl)" }}
+        >
+          <RevealBlock
+            direction="up"
+            delayClass="delay-100"
+            className="text-center"
+            style={{ textAlign: "center" }}
+          >
+            <h2
+              className="landing-headline"
+              style={{ fontSize: "var(--text-h2)" }}
+            >
+              Rest of the functionalities and perks
+            </h2>
+            <p className="landing-subheadline" style={{ margin: "0 auto" }}>
               Built to protect your assets natively.
             </p>
           </RevealBlock>
@@ -134,33 +310,54 @@ function LandingPage() {
             <RevealBlock direction="up" delayClass="delay-200">
               <div className="feature-card">
                 <h3>Multi-Policy Memory</h3>
-                <p>All your policies are saved securely to your Google Cloud Firestore dashboard for easy tracking across years.</p>
+                <p>
+                  All your policies are saved securely to your Google Cloud
+                  Firestore dashboard for easy tracking across years.
+                </p>
               </div>
             </RevealBlock>
             <RevealBlock direction="up" delayClass="delay-300">
               <div className="feature-card">
                 <h3>Side-by-Side Compare</h3>
-                <p>Upload two competing quotes and let the engine mathematically decide which one covers you better.</p>
+                <p>
+                  Upload two competing quotes and let the engine mathematically
+                  decide which one covers you better.
+                </p>
               </div>
             </RevealBlock>
             <RevealBlock direction="up" delayClass="delay-400">
               <div className="feature-card">
                 <h3>Jargon Decoder</h3>
-                <p>Hover over complex terms like "Indemnity" or "Subrogation" to see instant plain-English definitions.</p>
+                <p>
+                  Hover over complex terms like "Indemnity" or "Subrogation" to
+                  see instant plain-English definitions.
+                </p>
               </div>
             </RevealBlock>
           </div>
 
-          <RevealBlock direction="up" delayClass="delay-400" className="flex-center" style={{ marginTop: 'var(--space-3xl)' }}>
+          <RevealBlock
+            direction="up"
+            delayClass="delay-400"
+            className="flex-center"
+            style={{ marginTop: "var(--space-3xl)" }}
+          >
             <Link to="/workspace">
-              <Button variant="primary" size="lg" style={{ background: 'var(--snow)', color: 'var(--onyx)', fontWeight: 'bold' }}>
+              <Button
+                variant="primary"
+                size="lg"
+                style={{
+                  background: "var(--snow)",
+                  color: "var(--onyx)",
+                  fontWeight: "bold",
+                }}
+              >
                 Join the Beta
               </Button>
             </Link>
           </RevealBlock>
         </div>
       </section>
-
     </div>
   );
 }
