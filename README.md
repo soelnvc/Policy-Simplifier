@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🛡️ Policy Simplifier (Antigravity Edition)</h1>
+  <h1>🛡️ Policy Simplifier</h1>
 
   <p>
     <strong>A next-generation AI-powered platform designed to decode, analyze, and demystify complex insurance documents.</strong>
