@@ -1,10 +1,12 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
 import { analyzePolicy, formatFileSize } from '../services/aiService';
+import { saveComparison, getComparisonHistory } from '../services/dbService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import Loader from '../components/common/Loader';
 import './ComparisonPage.css';
 
 /**
@@ -16,18 +18,44 @@ function ComparisonPage() {
   const { addToast } = useToast();
 
   // Two policy slots
-  const [policyA, setPolicyA] = useState({ file: null, analysis: null });
-  const [policyB, setPolicyB] = useState({ file: null, analysis: null });
-  const [comparing, setComparing] = useState(false);
-  const [progress, setProgress] = useState({ a: 0, b: 0 });
-  const [progressLabel, setProgressLabel] = useState({ a: '', b: '' });
-  const [showResults, setShowResults] = useState(false);
-  const [activeTab, setActiveTab] = useState('coverage');
-  const fileRefA = useRef(null);
-  const fileRefB = useRef(null);
+  const [policyA, setPolicyA] = React.useState({ file: null, analysis: null });
+  const [policyB, setPolicyB] = React.useState({ file: null, analysis: null });
+  const [comparing, setComparing] = React.useState(false);
+  const [progress, setProgress] = React.useState({ a: 0, b: 0 });
+  const [progressLabel, setProgressLabel] = React.useState({ a: '', b: '' });
+  const [showResults, setShowResults] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState('coverage');
+  const [history, setHistory] = React.useState([]);
+  const [loadingHistory, setLoadingHistory] = React.useState(true);
+  
+  const fileRefA = React.useRef(null);
+  const fileRefB = React.useRef(null);
+
+  // Fetch History
+  React.useEffect(() => {
+    async function fetchHistory() {
+      if (!user?.uid) return;
+      try {
+        const data = await getComparisonHistory(user.uid);
+        setHistory(data);
+      } catch (err) {
+        console.error("Failed to fetch history", err);
+      } finally {
+        setLoadingHistory(false);
+      }
+    }
+    fetchHistory();
+  }, [user]);
+
+  const loadFromHistory = (item) => {
+    setPolicyA({ file: { name: item.nameA, size: item.sizeA || 0 }, analysis: item.analysisA });
+    setPolicyB({ file: { name: item.nameB, size: item.sizeB || 0 }, analysis: item.analysisB });
+    setShowResults(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // File handlers
-  const handleFile = useCallback((slot, file) => {
+  const handleFile = React.useCallback((slot, file) => {
     if (!file) return;
     const validTypes = ['application/pdf', 'image/png', 'image/jpeg', 'text/plain'];
     if (!validTypes.includes(file.type) || file.size > 25 * 1024 * 1024) return;
@@ -56,6 +84,21 @@ function ComparisonPage() {
 
       setPolicyA(prev => ({ ...prev, analysis: resultA }));
       setPolicyB(prev => ({ ...prev, analysis: resultB }));
+      
+      // Save to History if logged in
+      if (user?.uid) {
+        const historyItem = {
+          nameA: policyA.file.name,
+          sizeA: policyA.file.size,
+          analysisA: resultA,
+          nameB: policyB.file.name,
+          sizeB: policyB.file.size,
+          analysisB: resultB,
+        };
+        const id = await saveComparison(user.uid, historyItem);
+        setHistory(prev => [{ id, ...historyItem, displayDate: 'Just now' }, ...prev]);
+      }
+
       addToast('Comparison completed successfully.', 'success');
       setComparing(false);
       setShowResults(true);
@@ -149,6 +192,49 @@ function ComparisonPage() {
                   }>
                     Compare Policies
                   </Button>
+                </div>
+              )}
+
+              {/* ── Comparison History ── */}
+              {!comparing && history.length > 0 && (
+                <div className="compare__history">
+                  <div className="compare__history-header">
+                    <p className="text-overline">RECENT COMPARISONS</p>
+                    <span className="compare__history-disclaimer">Cleared after 30 days</span>
+                  </div>
+                  <div className="compare__history-grid">
+                    {history.map((item) => (
+                      <Card 
+                        key={item.id} 
+                        variant="lifted" 
+                        className="compare__history-card"
+                        onClick={() => loadFromHistory(item)}
+                      >
+                        <div className="compare__history-info">
+                          <div className="compare__history-names">
+                            <span className="compare__history-name">{item.nameA}</span>
+                            <span className="compare__history-vs">vs</span>
+                            <span className="compare__history-name">{item.nameB}</span>
+                          </div>
+                          <p className="compare__history-date">{item.displayDate}</p>
+                        </div>
+                        <div className="compare__history-scores">
+                          <div className={`compare__history-score ${item.analysisA.coverageScore >= 80 ? 'high' : item.analysisA.coverageScore >= 60 ? 'mid' : 'low'}`}>
+                            {item.analysisA.coverageScore}
+                          </div>
+                          <div className={`compare__history-score ${item.analysisB.coverageScore >= 80 ? 'high' : item.analysisB.coverageScore >= 60 ? 'mid' : 'low'}`}>
+                            {item.analysisB.coverageScore}
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {loadingHistory && !history.length && (
+                <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--space-2xl) 0' }}>
+                  <Loader variant="orb" />
                 </div>
               )}
             </>
@@ -330,7 +416,7 @@ function ComparisonPage() {
 
 /* ── Upload Slot Component ── */
 function UploadSlot({ label, file, onBrowse, onRemove, onDrop, comparing, progress, progressLabel }) {
-  const [dragOver, setDragOver] = useState(false);
+  const [dragOver, setDragOver] = React.useState(false);
 
   return (
     <div

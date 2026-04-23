@@ -440,6 +440,14 @@
   transition: background-color 0.2s;
 }
 
+.dashboard__risk-item--clickable {
+  cursor: pointer;
+}
+
+.dashboard__risk-item--clickable:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
 .dashboard__risk-item:hover {
   background: rgba(0, 0, 0, 0.02);
 }

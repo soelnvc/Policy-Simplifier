@@ -200,12 +200,101 @@
   letter-spacing: 0.05em;
 }
 
-/* Actions */
-.compare__actions {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--space-3xl);
+/* Comparison History */
+.compare__history {
+  margin-top: var(--space-4xl);
+  animation: fadeInUp 0.8s var(--ease-out-expo) both;
 }
+
+.compare__history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: var(--space-sm);
+}
+
+.compare__history-disclaimer {
+  font-size: 11px;
+  color: #a1a1a6;
+  font-style: italic;
+}
+
+.compare__history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-lg);
+}
+
+.compare__history-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg) !important;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.compare__history-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.compare__history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.compare__history-names {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: 4px;
+}
+
+.compare__history-name {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: #1d1d1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.compare__history-vs {
+  font-size: 10px;
+  font-weight: 800;
+  color: #a1a1a6;
+  text-transform: uppercase;
+}
+
+.compare__history-date {
+  font-size: 11px;
+  color: #86868b;
+}
+
+.compare__history-scores {
+  display: flex;
+  gap: 4px;
+  margin-left: var(--space-lg);
+}
+
+.compare__history-score {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.compare__history-score.high { background: rgba(46, 204, 113, 0.1); color: #27ae60; }
+.compare__history-score.mid { background: rgba(243, 156, 18, 0.1); color: #e67e22; }
+.compare__history-score.low { background: rgba(231, 76, 60, 0.1); color: #c0392b; }
 
 /* ============================================================
    RESULTS

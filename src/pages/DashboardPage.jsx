@@ -43,6 +43,10 @@ function DashboardPage() {
     navigate('/workspace', { state: { policy } });
   };
 
+  const handleViewRisk = (risk) => {
+    navigate('/workspace', { state: { policy: risk.parentPolicy, initialTab: 'risks' } });
+  };
+
   const firstName = user?.displayName?.split(' ')[0] || 'there';
 
   useEffect(() => {
@@ -75,7 +79,7 @@ function DashboardPage() {
       
       const risks = p.riskFlags || [];
       totalRisks += risks.length;
-      risks.forEach(r => allRisks.push({ ...r, policyName: p.policyOverview?.name }));
+      risks.forEach(r => allRisks.push({ ...r, policyName: p.policyOverview?.name, parentPolicy: p }));
 
       let cType = p.policyOverview?.type || 'Other';
       if (cType.toLowerCase().includes('health') || cType.toLowerCase().includes('medical')) cType = 'Health';
@@ -341,7 +345,11 @@ function DashboardPage() {
                   ) : (
                     <div className="dashboard__risk-list">
                       {data.topRisks.map((risk, i) => (
-                        <div key={i} className={`dashboard__risk-item dashboard__risk-item--${risk.level}`}>
+                        <div 
+                          key={i} 
+                          className={`dashboard__risk-item dashboard__risk-item--${risk.level} dashboard__risk-item--clickable`}
+                          onClick={() => handleViewRisk(risk)}
+                        >
                           <span className="dashboard__risk-dot" />
                           <div className="dashboard__risk-info">
                             <p className="dashboard__risk-flag">{risk.flag}</p>

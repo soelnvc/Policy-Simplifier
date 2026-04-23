@@ -2,6 +2,11 @@ import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc
 import { db } from './firebase';
 
 /**
+ * Database Interaction Layer — Firestore implementation.
+ * Handles policies, comparisons, and user settings.
+ */
+
+/**
  * Saves a new AI policy analysis mapped to the user.
  * We are using Option A (Lightweight): We store the structured JSON only.
  * 
@@ -80,6 +85,67 @@ export async function toggleFavoritePolicy(userId, policyId, isFavorite) {
   await updateDoc(policyRef, {
     isFavorite: isFavorite
   });
+}
+
+/**
+ * Saves a side-by-side comparison.
+ */
+export async function saveComparison(userId, comparisonData) {
+  if (!userId) throw new Error("Authentication required to save comparison.");
+
+  const comparisonsRef = collection(db, 'users', userId, 'comparisons');
+  const payload = {
+    ...comparisonData,
+    createdAt: serverTimestamp(),
+  };
+
+  const docRef = await addDoc(comparisonsRef, payload);
+  return docRef.id;
+}
+
+/**
+ * Fetches comparison history with 30-day auto-delete (filtering).
+ */
+export async function getComparisonHistory(userId) {
+  if (!userId) return [];
+
+  const comparisonsRef = collection(db, 'users', userId, 'comparisons');
+  const q = query(comparisonsRef, orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  
+  const now = new Date();
+  const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+  
+  const allComparisons = snapshot.docs.map(doc => {
+    const data = doc.data();
+    const createdAt = data.createdAt?.toDate();
+    return {
+      id: doc.id,
+      ...data,
+      createdAt,
+      displayDate: createdAt?.toLocaleDateString() || 'Just now'
+    };
+  });
+
+  // Client-side auto-delete logic: Filter out old items
+  // Real removal from DB can be done asynchronously here too
+  const validHistory = allComparisons.filter(item => {
+    if (!item.createdAt) return true;
+    return (now - item.createdAt) < thirtyDaysInMs;
+  });
+
+  // Optional: Background cleanup for genuinely old docs
+  allComparisons.forEach(async (item) => {
+    if (item.createdAt && (now - item.createdAt) > thirtyDaysInMs) {
+      try {
+        await deleteDoc(doc(db, 'users', userId, 'comparisons', item.id));
+      } catch (e) {
+        console.warn("Auto-delete cleanup failed", e);
+      }
+    }
+  });
+
+  return validHistory;
 }
 
 /**

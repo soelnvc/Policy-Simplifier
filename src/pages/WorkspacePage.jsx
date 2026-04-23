@@ -34,6 +34,9 @@ function WorkspacePage() {
     if (location.state?.policy) {
       setAnalysis(location.state.policy);
       setState('results');
+      if (location.state.initialTab) {
+        setActiveTab(location.state.initialTab);
+      }
     }
   }, [location.state]);
 
