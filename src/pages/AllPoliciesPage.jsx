@@ -16,7 +16,39 @@ function AllPoliciesPage() {
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState('date-desc');
+  const [filterType, setFilterType] = useState('All');
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, policyId: null });
+
+  const categories = ['All', 'Health', 'Life', 'Auto', 'Home'];
+  const activeIndex = categories.indexOf(filterType);
+
+  // ── Swipe Logic ──
+  const [dragStart, setDragStart] = useState(null);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  const handlePointerDown = (e) => setDragStart(e.clientX);
+  const handlePointerMove = (e) => {
+    if (dragStart !== null) setDragOffset(e.clientX - dragStart);
+  };
+  const handlePointerUp = () => {
+    if (Math.abs(dragOffset) > 40) {
+      if (dragOffset > 0) {
+        const nextIdx = (activeIndex - 1 + categories.length) % categories.length;
+        setFilterType(categories[nextIdx]);
+      } else {
+        const nextIdx = (activeIndex + 1) % categories.length;
+        setFilterType(categories[nextIdx]);
+      }
+    }
+    setDragStart(null);
+    setDragOffset(0);
+  };
+
+  const handleCategoryClick = (cat) => {
+    if (Math.abs(dragOffset) < 10) { // Small threshold to distinguish click from drag
+      setFilterType(cat);
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -34,10 +66,18 @@ function AllPoliciesPage() {
     loadData();
   }, [user, addToast]);
 
-  const sortedPolicies = useMemo(() => {
+  const filteredPolicies = useMemo(() => {
     if (!policies) return [];
+    if (filterType === 'All') return policies;
     
-    return [...policies].sort((a, b) => {
+    return policies.filter(p => {
+      const type = p.policyOverview?.type?.toLowerCase() || '';
+      return type.includes(filterType.toLowerCase());
+    });
+  }, [policies, filterType]);
+
+  const sortedPolicies = useMemo(() => {
+    return [...filteredPolicies].sort((a, b) => {
       switch (sortOption) {
         case 'score-desc':
           return (b.coverageScore || 0) - (a.coverageScore || 0);
@@ -55,7 +95,7 @@ function AllPoliciesPage() {
           return 0;
       }
     });
-  }, [policies, sortOption]);
+  }, [filteredPolicies, sortOption]);
 
   const initiateDelete = (e, policyId) => {
     e.preventDefault();
@@ -107,41 +147,96 @@ function AllPoliciesPage() {
   }
 
   return (
-    <div className="all-policies container">
-      <div className="all-policies__header">
-        <div>
-          <h1 className="all-policies__title">Your Policy Portfolio</h1>
-          <p className="all-policies__subtitle">
-            Manage all your analyzed documents and track identified risks over time.
-          </p>
-        </div>
-        
-        {policies.length > 0 && (
-          <div className="all-policies__sort-wrap">
-            <label htmlFor="sort" className="all-policies__sort-label">Sort by:</label>
-            <div className="all-policies__select-container">
-              <select 
-                id="sort"
-                className="all-policies__select"
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-              >
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="score-desc">Rating: High to Low</option>
-                <option value="score-asc">Rating: Low to High</option>
-                <option value="risks-desc">Most Risks</option>
-                <option value="risks-asc">Fewest Risks</option>
-              </select>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="all-policies__select-icon">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
+    <div className="all-policies">
+      {/* ── HERO SECTION (White Strip) ── */}
+      <div className="all-policies__hero">
+        <div className="container">
+          {/* ── 3D Carousel Filter ── */}
+          <div className="all-policies__filters-top">
+            <div 
+              className="all-policies__carousel-container"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerUp}
+            >
+              <div className="all-policies__carousel">
+                {categories.map((cat, idx) => {
+                  let distance = idx - activeIndex;
+                  if (distance > categories.length / 2) distance -= categories.length;
+                  if (distance < -categories.length / 2) distance += categories.length;
+
+                  const absDistance = Math.abs(distance);
+                  const offset = distance * 150 + dragOffset;
+                  
+                  const scale = 1 - absDistance * 0.25;
+                  const opacity = 1 - absDistance * 0.6;
+                  const zIndex = 10 - absDistance;
+
+                  return (
+                    <button
+                      key={cat}
+                      className={`all-policies__carousel-item ${idx === activeIndex ? 'all-policies__carousel-item--active' : ''}`}
+                      onClick={() => handleCategoryClick(cat)}
+                      style={{
+                        transform: `translateX(${offset}px) scale(${scale})`,
+                        opacity: opacity < 0 ? 0 : opacity,
+                        zIndex,
+                        pointerEvents: absDistance > 1.5 ? 'none' : 'auto'
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="all-policies__carousel-indicator">
+                <div className="all-policies__carousel-dot" style={{ transform: `translateX(${activeIndex * 120}px)` }} />
+              </div>
             </div>
           </div>
-        )}
+
+          <div className="all-policies__header">
+            <div>
+              <h1 className="all-policies__title">Your Policy Portfolio</h1>
+              <p className="all-policies__subtitle">
+                Manage all your analyzed documents and track identified risks over time.
+              </p>
+            </div>
+            
+            {policies.length > 0 && (
+              <div className="all-policies__sort-pill">
+                <span className="all-policies__sort-label">SORT BY:</span>
+                <select 
+                  className="all-policies__select-invisible"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                >
+                  <option value="date-desc">Newest First</option>
+                  <option value="date-asc">Oldest First</option>
+                  <option value="score-desc">Rating: High to Low</option>
+                  <option value="score-asc">Rating: Low to High</option>
+                  <option value="risks-desc">Most Risks</option>
+                  <option value="risks-asc">Fewest Risks</option>
+                </select>
+                <span className="all-policies__sort-value">
+                  {sortOption === 'date-desc' ? 'Newest First' : 
+                   sortOption === 'date-asc' ? 'Oldest First' : 
+                   sortOption === 'score-desc' ? 'Rating: High to Low' : 
+                   sortOption === 'score-asc' ? 'Rating: Low to High' : 
+                   sortOption === 'risks-desc' ? 'Most Risks' : 'Fewest Risks'}
+                </span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" style={{ marginLeft: '4px' }}>
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {policies.length === 0 ? (
+      <div className="container" style={{ paddingTop: 'var(--space-3xl)' }}>
+        {policies.length === 0 ? (
         <div className="all-policies__empty">
           <div className="all-policies__empty-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
@@ -149,6 +244,16 @@ function AllPoliciesPage() {
           <p>You haven't analyzed any policies yet.</p>
           <Button variant="primary" onClick={() => navigate('/workspace')}>
             Analyze Your First Policy
+          </Button>
+        </div>
+      ) : sortedPolicies.length === 0 ? (
+        <div className="all-policies__empty">
+          <div className="all-policies__empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+          </div>
+          <p>No {filterType} policies found in your portfolio.</p>
+          <Button variant="secondary" onClick={() => setFilterType('All')}>
+            Clear Filter
           </Button>
         </div>
       ) : (
@@ -227,6 +332,7 @@ function AllPoliciesPage() {
         onConfirm={executeDelete}
         onCancel={() => setConfirmModal({ isOpen: false, policyId: null })}
       />
+    </div>
     </div>
   );
 }
