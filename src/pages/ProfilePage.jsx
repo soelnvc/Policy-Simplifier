@@ -1,13 +1,47 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getUserPolicies } from '../services/dbService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import Loader from '../components/common/Loader';
 import './ProfilePage.css';
 
 function ProfilePage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [policies, setPolicies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      if (!user?.uid) return;
+      try {
+        const data = await getUserPolicies(user.uid);
+        setPolicies(data);
+      } catch (err) {
+        console.error("Failed to load profile data", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [user]);
+
+  const stats = useMemo(() => {
+    if (!policies || policies.length === 0) return { count: 0, score: '—', risks: 0 };
+    
+    const totalScore = policies.reduce((acc, p) => acc + (p.coverageScore || 0), 0);
+    const totalRisks = policies.reduce((acc, p) => acc + (p.riskFlags?.length || 0), 0);
+    const avgScore = Math.round(totalScore / policies.length);
+    
+    return {
+      count: policies.length,
+      score: `${avgScore}%`,
+      risks: totalRisks
+    };
+  }, [policies]);
 
   const userInitial = user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U';
   const firstName = user?.displayName?.split(' ')[0] || 'User';
@@ -18,6 +52,14 @@ function ProfilePage() {
     ? new Date(user.metadata.lastSignInTime).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     : '—';
   const provider = user?.providerData?.[0]?.providerId === 'google.com' ? 'Google' : 'Email';
+
+  if (loading) {
+    return (
+      <div className="theme-main page-content page-enter" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
+        <Loader variant="orb" />
+      </div>
+    );
+  }
 
   return (
     <div className="theme-main page-content page-enter">
@@ -60,11 +102,11 @@ function ProfilePage() {
           {/* ── Stats Row ── */}
           <div className="profile__stats">
             <Card variant="lifted" className="profile__stat-card">
-              <p className="profile__stat-number">0</p>
+              <p className="profile__stat-number">{stats.count}</p>
               <p className="profile__stat-label">Policies Analyzed</p>
             </Card>
             <Card variant="lifted" className="profile__stat-card">
-              <p className="profile__stat-number">—</p>
+              <p className="profile__stat-number">{stats.score}</p>
               <p className="profile__stat-label">Coverage Score</p>
             </Card>
             <Card variant="lifted" className="profile__stat-card">
@@ -72,7 +114,7 @@ function ProfilePage() {
               <p className="profile__stat-label">Comparisons Made</p>
             </Card>
             <Card variant="lifted" className="profile__stat-card">
-              <p className="profile__stat-number">0</p>
+              <p className="profile__stat-number">{stats.risks}</p>
               <p className="profile__stat-label">Risks Flagged</p>
             </Card>
           </div>
@@ -178,20 +220,60 @@ function ProfilePage() {
           {activeTab === 'activity' && (
             <div className="profile__tab-content">
               <Card variant="lifted" className="profile__activity-card">
-                <div className="profile__activity-empty">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                  <p className="profile__activity-empty-title">No activity yet</p>
-                  <p className="profile__activity-empty-desc">
-                    Your analysis history, comparisons, and exports will appear here as you use the platform.
-                  </p>
-                  <Link to="/workspace">
-                    <Button variant="primary" icon={
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                    }>
-                      Start Your First Analysis
-                    </Button>
-                  </Link>
-                </div>
+                {policies.length === 0 ? (
+                  <div className="profile__activity-empty">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                    <p className="profile__activity-empty-title">No activity yet</p>
+                    <p className="profile__activity-empty-desc">
+                      Your analysis history, comparisons, and exports will appear here as you use the platform.
+                    </p>
+                    <Link to="/workspace">
+                      <Button variant="primary" icon={
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                      }>
+                        Start Your First Analysis
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="profile__activity-feed">
+                    <p className="text-overline" style={{ marginBottom: 'var(--space-lg)' }}>RECENT ANALYSES</p>
+                    <div className="profile__activity-list">
+                      {policies.slice(0, 5).map((policy) => (
+                        <div 
+                          key={policy.id} 
+                          className="profile__activity-item"
+                          onClick={() => navigate('/workspace', { state: { policy } })}
+                        >
+                          <div className="profile__activity-icon">
+                            {policy.policyOverview?.type?.toLowerCase().includes('health') ? '🛡️' : 
+                             policy.policyOverview?.type?.toLowerCase().includes('auto') ? '🚗' : 
+                             policy.policyOverview?.type?.toLowerCase().includes('home') ? '🏠' : '📄'}
+                          </div>
+                          <div className="profile__activity-info">
+                            <p className="profile__activity-name">{policy.policyOverview?.name || 'Untitled Policy'}</p>
+                            <p className="profile__activity-meta">
+                              {policy.policyOverview?.type || 'Standard'} · {policy.capturedDate || 'Recently'}
+                            </p>
+                          </div>
+                          <div className="profile__activity-score">
+                            <span className="profile__activity-score-label">Score</span>
+                            <span className={`profile__activity-score-val ${policy.coverageScore >= 80 ? 'text-success' : policy.coverageScore >= 60 ? 'text-warning' : 'text-danger'}`}>
+                              {policy.coverageScore}%
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="profile__activity-footer">
+                      <Link to="/policies">
+                        <Button variant="secondary" size="sm">
+                          View All Policies
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </Card>
             </div>
           )}

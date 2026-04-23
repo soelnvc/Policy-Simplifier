@@ -323,7 +323,7 @@
    ============================================================ */
 
 .profile__activity-card {
-  padding: var(--space-3xl) var(--space-xl) !important;
+  padding: var(--space-xl) !important;
 }
 
 .profile__activity-empty {
@@ -332,6 +332,7 @@
   align-items: center;
   text-align: center;
   color: #a1a1a6;
+  padding: var(--space-3xl) 0;
 }
 
 .profile__activity-empty-title {
@@ -348,6 +349,88 @@
   line-height: 1.6;
   margin-bottom: var(--space-xl);
 }
+
+.profile__activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xl);
+}
+
+.profile__activity-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.profile__activity-item:hover {
+  background: #f5f5f7;
+  transform: translateX(4px);
+}
+
+.profile__activity-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.profile__activity-info {
+  flex: 1;
+}
+
+.profile__activity-name {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 2px;
+}
+
+.profile__activity-meta {
+  font-size: Var(--text-caption);
+  color: #86868b;
+}
+
+.profile__activity-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.profile__activity-score-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a1a1a6;
+}
+
+.profile__activity-score-val {
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+}
+
+.profile__activity-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.text-success { color: #2ecc71; }
+.text-warning { color: #f39c12; }
+.text-danger { color: #e74c3c; }
 
 /* ============================================================
    RESPONSIVE

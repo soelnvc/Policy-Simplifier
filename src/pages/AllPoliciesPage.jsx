@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { getUserPolicies, deletePolicyAnalysis, toggleFavoritePolicy } from '../services/dbService';
@@ -15,6 +15,7 @@ function AllPoliciesPage() {
   const { addToast } = useToast();
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortOption, setSortOption] = useState('date-desc');
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, policyId: null });
 
   useEffect(() => {
@@ -22,7 +23,7 @@ function AllPoliciesPage() {
       if (!user?.uid) return;
       try {
         const data = await getUserPolicies(user.uid);
-        setPolicies(data);
+        setPolicies(data || []);
       } catch (err) {
         console.error("Failed to load policies", err);
         addToast('Failed to load your policies.', 'error');
@@ -32,6 +33,29 @@ function AllPoliciesPage() {
     }
     loadData();
   }, [user, addToast]);
+
+  const sortedPolicies = useMemo(() => {
+    if (!policies) return [];
+    
+    return [...policies].sort((a, b) => {
+      switch (sortOption) {
+        case 'score-desc':
+          return (b.coverageScore || 0) - (a.coverageScore || 0);
+        case 'score-asc':
+          return (a.coverageScore || 0) - (b.coverageScore || 0);
+        case 'date-desc':
+          return new Date(b.createdAt || b.capturedDate).getTime() - new Date(a.createdAt || a.capturedDate).getTime();
+        case 'date-asc':
+          return new Date(a.createdAt || a.capturedDate).getTime() - new Date(b.createdAt || b.capturedDate).getTime();
+        case 'risks-desc':
+          return (b.riskFlags?.length || 0) - (a.riskFlags?.length || 0);
+        case 'risks-asc':
+          return (a.riskFlags?.length || 0) - (b.riskFlags?.length || 0);
+        default:
+          return 0;
+      }
+    });
+  }, [policies, sortOption]);
 
   const initiateDelete = (e, policyId) => {
     e.preventDefault();
@@ -85,10 +109,36 @@ function AllPoliciesPage() {
   return (
     <div className="all-policies container">
       <div className="all-policies__header">
-        <h1 className="all-policies__title">Your Policy Portfolio</h1>
-        <p className="all-policies__subtitle">
-          Manage all your analyzed documents and track identified risks over time.
-        </p>
+        <div>
+          <h1 className="all-policies__title">Your Policy Portfolio</h1>
+          <p className="all-policies__subtitle">
+            Manage all your analyzed documents and track identified risks over time.
+          </p>
+        </div>
+        
+        {policies.length > 0 && (
+          <div className="all-policies__sort-wrap">
+            <label htmlFor="sort" className="all-policies__sort-label">Sort by:</label>
+            <div className="all-policies__select-container">
+              <select 
+                id="sort"
+                className="all-policies__select"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+                <option value="score-desc">Rating: High to Low</option>
+                <option value="score-asc">Rating: Low to High</option>
+                <option value="risks-desc">Most Risks</option>
+                <option value="risks-asc">Fewest Risks</option>
+              </select>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="all-policies__select-icon">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+          </div>
+        )}
       </div>
 
       {policies.length === 0 ? (
@@ -103,7 +153,7 @@ function AllPoliciesPage() {
         </div>
       ) : (
         <div className="all-policies__grid">
-          {policies.map((policy) => (
+          {sortedPolicies.map((policy) => (
             <Card 
               key={policy.id} 
               variant="lifted" 
