@@ -61,7 +61,7 @@ A dark-mode optimized, cinematic workspace environment where users upload their 
 Users build an active portfolio of analyzed policies. The application dynamically calculates an average **Portfolio Health Score**, counting open risks and grouping policies by type (Auto, Health, Home, Life).
 
 <br/>
-<img src="public/dashboard_preview.png" width="100%" style="border-radius: 12px; border: 1px solid var(--border-light); margin: 20px 0;" alt="Dashboard Preview" />
+<img width="1352" height="878" alt="Screenshot 2026-04-23 at 5 28 47 PM" src="https://github.com/user-attachments/assets/c6fd0086-cc10-476d-b226-57745ddbe51e" />
 <br/>
 
 ### 🔖 Universal Bookmark System
