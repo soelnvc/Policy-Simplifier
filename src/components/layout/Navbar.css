@@ -18,7 +18,7 @@
   background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
 
   transition:
@@ -40,7 +40,7 @@
 
 /* ── Dark Page Context (Landing etc.) ── */
 .is-dark-page .navbar {
-  background: rgba(0, 0, 0, 0.30);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(28px) saturate(1.6);
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -50,7 +50,7 @@
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(40px) saturate(1.8);
   -webkit-backdrop-filter: blur(40px) saturate(1.8);
-  border-bottom-color: rgba(255, 255, 255, 0.10);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 /* ── Menu Open State: Let mega menu children handle glass ── */
@@ -187,14 +187,14 @@
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: 
+  transition:
     color var(--duration-fast) var(--ease-out-quad),
     opacity var(--duration-fast) var(--ease-out-quad);
   position: relative;
 }
 
 .navbar__link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -4px;
   left: 0;
@@ -240,7 +240,9 @@
 }
 
 .navbar__cta:hover {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.18), 0 6px 20px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.18),
+    0 6px 20px rgba(0, 0, 0, 0.12);
   opacity: 1;
 }
 
@@ -290,15 +292,15 @@
   right: -8px;
   min-width: 260px;
   padding: var(--space-sm);
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(50px) saturate(1.6);
-  -webkit-backdrop-filter: blur(50px) saturate(1.6);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(100px) saturate(7.5);
+  -webkit-backdrop-filter: blur(100px) saturate(7.5);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 24px;
   box-shadow:
     0 16px 48px rgba(0, 0, 0, 0.12),
     0 4px 16px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   z-index: var(--z-modal);
 
   /* ── Apple-style bubble expand ── */
@@ -325,6 +327,37 @@
     opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
     visibility 0.35s;
+}
+
+/* ── Dark Page Dropdown ── */
+.is-dark-page .profile-dropdown {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+}
+
+.is-dark-page .profile-dropdown__name {
+  color: #ffffff;
+}
+.is-dark-page .profile-dropdown__email {
+  color: rgba(255, 255, 255, 0.45);
+}
+.is-dark-page .profile-dropdown__divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+.is-dark-page .profile-dropdown__item {
+  color: rgba(255, 255, 255, 0.7);
+}
+.is-dark-page .profile-dropdown__item:hover {
+  color: #ffffff;
+}
+.is-dark-page .profile-dropdown__item::after {
+  background-color: #ffffff;
+}
+.is-dark-page .profile-dropdown__header:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Dropdown header — user info */
@@ -416,7 +449,7 @@
 
 /* Underline that slides in on hover (like navbar links) */
 .profile-dropdown__item::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 2px;
   left: var(--space-sm);
@@ -491,16 +524,16 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   z-index: 1500;
-  
+
   /* Firm Slide Animation */
   max-height: 0;
   opacity: 0;
   visibility: hidden;
   overflow: hidden;
   padding-top: var(--navbar-height);
-  
+
   /* Firm Slide Animation: Fast entry, snappy inertia */
-  transition: 
+  transition:
     max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.35s ease,
     visibility 0.35s;
@@ -549,8 +582,8 @@
   opacity: 0;
   transform: translateY(-20px);
   /* Entrance: Snappy spring overshoot */
-  transition: 
-    opacity 0.5s ease-out 0.1s, 
+  transition:
+    opacity 0.5s ease-out 0.1s,
     transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
 }
 
@@ -642,10 +675,10 @@
   -webkit-backdrop-filter: blur(12px);
   z-index: 100; /* Below header context */
   pointer-events: auto;
-  
+
   opacity: 0;
   visibility: hidden;
-  transition: 
+  transition:
     opacity 0.4s var(--ease-out-quad),
     visibility 0.4s;
 }
@@ -661,7 +694,7 @@
   .navbar__mega-menu {
     display: none;
   }
-  
+
   .navbar__hamburger {
     display: flex !important;
   }

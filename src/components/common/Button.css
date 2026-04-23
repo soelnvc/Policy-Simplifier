@@ -61,15 +61,27 @@
   width: 100%;
 }
 
-/* ── Primary: Solid Onyx with Monolith gradient ── */
+/* ── Primary: Empty container with robust liquid fill hover ── */
 .btn--primary {
-  background: linear-gradient(135deg, var(--onyx) 0%, var(--onyx-dim) 100%);
-  color: var(--text-on-onyx);
+  background-color: transparent;
+  background-image: linear-gradient(to right, #000000 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  color: #000000;
+  box-shadow: inset 0 0 0 2px #000000;
+  position: relative;
+  overflow: hidden;
+  transition: background-position 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+              color 0.3s ease, 
+              transform var(--duration-fast) var(--ease-out-quad);
 }
 
 .btn--primary:hover:not(:disabled) {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.20), 0 8px 32px rgba(0, 0, 0, 0.15);
+  background-position: left bottom;
+  color: #ffffff;
+  box-shadow: inset 0 0 0 2px #000000, 0 8px 24px rgba(0, 0, 0, 0.2);
 }
+
 
 /* ── Secondary: Surface container ── */
 .btn--secondary {
@@ -93,7 +105,7 @@
 }
 
 .btn--ghost .btn__label::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -114,7 +126,9 @@
 }
 
 .btn--danger:hover:not(:disabled) {
-  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.25), 0 8px 32px rgba(231, 76, 60, 0.20);
+  box-shadow:
+    0 0 0 2px rgba(231, 76, 60, 0.25),
+    0 8px 32px rgba(231, 76, 60, 0.2);
 }
 
 /* ── Icon ── */
