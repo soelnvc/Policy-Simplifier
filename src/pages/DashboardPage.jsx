@@ -272,168 +272,165 @@ function DashboardPage() {
                 </Card>
               </div>
 
-              {/* ── Main Grid ── */}
-              <div className="dashboard__grid">
-                {/* Left Column */}
-                <div className="dashboard__col-main">
-                  {/* Portfolio Score */}
-                  <Card variant="lifted" className="dashboard__portfolio-card">
-                    <div className="dashboard__portfolio-top">
-                      <div>
-                        <p className="text-overline" style={{ marginBottom: 'var(--space-sm)' }}>PORTFOLIO HEALTH</p>
-                        <p className="dashboard__portfolio-desc">
-                          Your overall coverage score based on {data.stats.totalPolicies} analyzed policies.
-                          {data.portfolioScore >= 80 ? ' Looking strong.' : data.portfolioScore >= 60 ? ' Room for improvement.' : ' Needs immediate attention.'}
+              {/* ── Main Row: Portfolio Health + Top Risks ── */}
+              <div className="dashboard__main-row">
+                {/* Portfolio Health Card (larger) */}
+                <Card variant="lifted" className="dashboard__portfolio-card">
+                  <div className="dashboard__portfolio-top">
+                    <div>
+                      <p className="text-overline" style={{ marginBottom: 'var(--space-sm)' }}>PORTFOLIO HEALTH</p>
+                      <p className="dashboard__portfolio-desc">
+                        Your overall coverage score based on {data.stats.totalPolicies} analyzed policies.
+                        {data.portfolioScore >= 80 ? ' Looking strong.' : data.portfolioScore >= 60 ? ' Room for improvement.' : ' Needs immediate attention.'}
+                      </p>
+                    </div>
+                    <div className="dashboard__portfolio-dial">
+                      <svg viewBox="0 0 100 100" className="dashboard__dial-svg">
+                        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7" />
+                        <circle
+                          cx="50" cy="50" r="42"
+                          fill="none"
+                          stroke={data.portfolioScore >= 80 ? '#2ecc71' : data.portfolioScore >= 60 ? '#f39c12' : '#e74c3c'}
+                          strokeWidth="7"
+                          strokeLinecap="round"
+                          strokeDasharray={`${(data.portfolioScore / 100) * 264} 264`}
+                          transform="rotate(-90 50 50)"
+                          className="dashboard__dial-ring"
+                        />
+                      </svg>
+                      <div className="dashboard__dial-center">
+                        <span className="dashboard__dial-number">{data.portfolioScore}</span>
+                        <span className="dashboard__dial-grade">{data.portfolioGrade}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Category Breakdown */}
+                  <div className="dashboard__categories">
+                    {data.categoryBreakdown.map((cat) => (
+                      <div key={cat.category} className="dashboard__category">
+                        <div className="dashboard__category-header">
+                          <span className="dashboard__category-icon">{cat.icon}</span>
+                          <span className="dashboard__category-name">{cat.category}</span>
+                          <span className="dashboard__category-score">
+                            {cat.policies > 0 ? `${cat.score}%` : '—'}
+                          </span>
+                        </div>
+                        <div className="dashboard__category-bar">
+                          <div
+                            className="dashboard__category-fill"
+                            style={{
+                              width: cat.policies > 0 ? `${cat.score}%` : '0%',
+                              background: cat.color,
+                            }}
+                          />
+                        </div>
+                        <p className="dashboard__category-meta">
+                          {cat.policies > 0 ? `${cat.policies} policy` : 'No policy analyzed'}
                         </p>
                       </div>
-                      <div className="dashboard__portfolio-dial">
-                        <svg viewBox="0 0 100 100" className="dashboard__dial-svg">
-                          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7" />
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Top Risk Alerts (smaller, right) */}
+                <Card variant="lifted" className="dashboard__risks-card">
+                  <p className="text-overline" style={{ marginBottom: 'var(--space-md)' }}>TOP RISK ALERTS</p>
+                  {data.topRisks.length === 0 ? (
+                    <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>No major risks detected across your portfolio!</p>
+                  ) : (
+                    <div className="dashboard__risk-list">
+                      {data.topRisks.map((risk, i) => (
+                        <div key={i} className={`dashboard__risk-item dashboard__risk-item--${risk.level}`}>
+                          <span className="dashboard__risk-dot" />
+                          <div className="dashboard__risk-info">
+                            <p className="dashboard__risk-flag">{risk.flag}</p>
+                            <p className="dashboard__risk-policy">{risk.policyName}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              </div>
+
+              {/* ── Recent Analyses — Full Width ── */}
+              <Card variant="lifted" className="dashboard__recent-card">
+                <div className="dashboard__recent-header">
+                  <p className="text-overline">RECENT ANALYSES</p>
+                  <Link to="/policies" className="dashboard__see-all">View all</Link>
+                </div>
+                <div className="dashboard__recent-list">
+                  {data.recentAnalyses.map((analysis) => (
+                    <div 
+                      key={analysis.id} 
+                      className="dashboard__recent-item dashboard__recent-item--clickable"
+                      onClick={() => handleViewPolicy(analysis)}
+                    >
+                      <div className="dashboard__recent-score-ring">
+                        <svg viewBox="0 0 36 36" className="dashboard__mini-dial">
+                          <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="3" />
                           <circle
-                            cx="50" cy="50" r="42"
+                            cx="18" cy="18" r="15"
                             fill="none"
-                            stroke={data.portfolioScore >= 80 ? '#2ecc71' : data.portfolioScore >= 60 ? '#f39c12' : '#e74c3c'}
-                            strokeWidth="7"
+                            stroke={analysis.coverageScore >= 80 ? '#2ecc71' : analysis.coverageScore >= 60 ? '#f39c12' : '#e74c3c'}
+                            strokeWidth="3"
                             strokeLinecap="round"
-                            strokeDasharray={`${(data.portfolioScore / 100) * 264} 264`}
-                            transform="rotate(-90 50 50)"
-                            className="dashboard__dial-ring"
+                            strokeDasharray={`${((analysis.coverageScore || 0) / 100) * 94.2} 94.2`}
+                            transform="rotate(-90 18 18)"
                           />
                         </svg>
-                        <div className="dashboard__dial-center">
-                          <span className="dashboard__dial-number">{data.portfolioScore}</span>
-                          <span className="dashboard__dial-grade">{data.portfolioGrade}</span>
-                        </div>
+                        <span className="dashboard__mini-score">{analysis.coverageScore || 0}</span>
                       </div>
-                    </div>
-
-                    {/* Category Breakdown */}
-                    <div className="dashboard__categories">
-                      {data.categoryBreakdown.map((cat) => (
-                        <div key={cat.category} className="dashboard__category">
-                          <div className="dashboard__category-header">
-                            <span className="dashboard__category-icon">{cat.icon}</span>
-                            <span className="dashboard__category-name">{cat.category}</span>
-                            <span className="dashboard__category-score">
-                              {cat.policies > 0 ? `${cat.score}%` : '—'}
-                            </span>
-                          </div>
-                          <div className="dashboard__category-bar">
-                            <div
-                              className="dashboard__category-fill"
-                              style={{
-                                width: cat.policies > 0 ? `${cat.score}%` : '0%',
-                                background: cat.color,
-                              }}
-                            />
-                          </div>
-                          <p className="dashboard__category-meta">
-                            {cat.policies > 0 ? `${cat.policies} policy` : 'No policy analyzed'}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </Card>
-                </div>
-
-                {/* Right Column */}
-                <div className="dashboard__col-side">
-                  {/* Recent Analyses */}
-                  <Card variant="lifted" className="dashboard__recent-card">
-                    <div className="dashboard__recent-header">
-                      <p className="text-overline">RECENT ANALYSES</p>
-                      <Link to="/policies" className="dashboard__see-all">View all</Link>
-                    </div>
-                    <div className="dashboard__recent-list">
-                      {data.recentAnalyses.map((analysis) => (
-                        <div 
-                          key={analysis.id} 
-                          className="dashboard__recent-item dashboard__recent-item--clickable"
-                          onClick={() => handleViewPolicy(analysis)}
+                      <div className="dashboard__recent-info">
+                        <p className="dashboard__recent-name">{analysis.policyOverview?.name || 'Unknown Policy'}</p>
+                        <p className="dashboard__recent-meta">{analysis.policyOverview?.type || 'Standard'} · {analysis.capturedDate || 'Recent'}</p>
+                      </div>
+                      <div className="dashboard__recent-actions">
+                        {(analysis.riskFlags?.length || 0) > 0 && (
+                          <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
+                        )}
+                        <button 
+                          className="dashboard__recent-delete"
+                          onClick={(e) => initiateDelete(e, analysis.id)}
+                          aria-label="Delete analysis"
                         >
-                          <div className="dashboard__recent-score-ring">
-                            <svg viewBox="0 0 36 36" className="dashboard__mini-dial">
-                              <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="3" />
-                              <circle
-                                cx="18" cy="18" r="15"
-                                fill="none"
-                                stroke={analysis.coverageScore >= 80 ? '#2ecc71' : analysis.coverageScore >= 60 ? '#f39c12' : '#e74c3c'}
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeDasharray={`${((analysis.coverageScore || 0) / 100) * 94.2} 94.2`}
-                                transform="rotate(-90 18 18)"
-                              />
-                            </svg>
-                            <span className="dashboard__mini-score">{analysis.coverageScore || 0}</span>
-                          </div>
-                          <div className="dashboard__recent-info">
-                            <p className="dashboard__recent-name">{analysis.policyOverview?.name || 'Unknown Policy'}</p>
-                            <p className="dashboard__recent-meta">{analysis.policyOverview?.type || 'Standard'} · {analysis.capturedDate || 'Recent'}</p>
-                          </div>
-                          <div className="dashboard__recent-actions">
-                            {(analysis.riskFlags?.length || 0) > 0 && (
-                              <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
-                            )}
-                            <button 
-                              className="dashboard__recent-delete"
-                              onClick={(e) => initiateDelete(e, analysis.id)}
-                              aria-label="Delete analysis"
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </Card>
-
-                  {/* Top Risk Alerts */}
-                  <Card variant="lifted" className="dashboard__risks-card">
-                    <p className="text-overline" style={{ marginBottom: 'var(--space-md)' }}>TOP RISK ALERTS</p>
-                    {data.topRisks.length === 0 ? (
-                      <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>No major risks detected across your portfolio!</p>
-                    ) : (
-                      <div className="dashboard__risk-list">
-                        {data.topRisks.map((risk, i) => (
-                          <div key={i} className={`dashboard__risk-item dashboard__risk-item--${risk.level}`}>
-                            <span className="dashboard__risk-dot" />
-                            <div className="dashboard__risk-info">
-                              <p className="dashboard__risk-flag">{risk.flag}</p>
-                              <p className="dashboard__risk-policy">{risk.policyName}</p>
-                            </div>
-                          </div>
-                        ))}
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          </svg>
+                        </button>
                       </div>
-                    )}
-                  </Card>
-
-                  {/* Quick Actions */}
-                  <Card variant="lifted" className="dashboard__actions-card">
-                    <p className="text-overline" style={{ marginBottom: 'var(--space-md)' }}>QUICK ACTIONS</p>
-                    <div className="dashboard__quick-actions">
-                      <Link to="/workspace" className="dashboard__quick-action">
-                        <span className="dashboard__qa-icon">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                        </span>
-                        <span className="dashboard__qa-label">Upload New Policy</span>
-                      </Link>
-                      <Link to="/compare" className="dashboard__quick-action">
-                        <span className="dashboard__qa-icon">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="8" height="16" rx="1" /><rect x="14" y="4" width="8" height="16" rx="1" /><line x1="6" y1="8" x2="6" y2="8.01" /><line x1="18" y1="8" x2="18" y2="8.01" /></svg>
-                        </span>
-                        <span className="dashboard__qa-label">Compare Policies</span>
-                      </Link>
-                      <Link to="/settings" className="dashboard__quick-action">
-                        <span className="dashboard__qa-icon">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
-                        </span>
-                        <span className="dashboard__qa-label">Export Reports</span>
-                      </Link>
                     </div>
-                  </Card>
+                  ))}
                 </div>
+              </Card>
+
+              {/* ── Quick Actions — 3 Cards Row ── */}
+              <div className="dashboard__actions-row">
+                <Card variant="lifted" className="dashboard__action-card">
+                  <Link to="/workspace" className="dashboard__action-link">
+                    <span className="dashboard__action-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                    </span>
+                    <span className="dashboard__action-label">Upload New Policy</span>
+                  </Link>
+                </Card>
+                <Card variant="lifted" className="dashboard__action-card">
+                  <Link to="/compare" className="dashboard__action-link">
+                    <span className="dashboard__action-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="8" height="16" rx="1" /><rect x="14" y="4" width="8" height="16" rx="1" /></svg>
+                    </span>
+                    <span className="dashboard__action-label">Compare Policies</span>
+                  </Link>
+                </Card>
+                <Card variant="lifted" className="dashboard__action-card">
+                  <Link to="/policies" className="dashboard__action-link">
+                    <span className="dashboard__action-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
+                    </span>
+                    <span className="dashboard__action-label">View All Policies</span>
+                  </Link>
+                </Card>
               </div>
             </>
           )}

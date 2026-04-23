@@ -121,26 +121,15 @@
 }
 
 /* ============================================================
-   MAIN GRID
+   MAIN ROW — Portfolio Health + Recent Analyses
    ============================================================ */
 
-.dashboard__grid {
+.dashboard__main-row {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1.8fr 1fr;
   gap: var(--space-xl);
-  align-items: start;
-}
-
-.dashboard__col-main {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-}
-
-.dashboard__col-side {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
+  align-items: stretch;
+  margin-bottom: var(--space-xl);
 }
 
 /* ============================================================
@@ -266,73 +255,12 @@
 }
 
 /* ============================================================
-   PREMIUM TIMELINE
-   ============================================================ */
-
-.dashboard__timeline-card {
-  padding: var(--space-xl) !important;
-}
-
-.dashboard__chart {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-md);
-  height: 140px;
-  margin-bottom: var(--space-md);
-}
-
-.dashboard__chart-bar-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-}
-
-.dashboard__chart-bar {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  overflow: hidden;
-}
-
-.dashboard__chart-fill {
-  width: 100%;
-  background: linear-gradient(to top, #1d1d1f, #86868b);
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  min-height: 2px;
-  transition: height 1s var(--ease-out-expo);
-  animation: barGrow 1s var(--ease-out-expo) both;
-  animation-delay: 0.8s;
-}
-
-.dashboard__chart-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: #a1a1a6;
-  margin-top: var(--space-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.dashboard__chart-note {
-  font-size: var(--text-body-sm);
-  color: #86868b;
-}
-
-.dashboard__chart-note strong {
-  color: #1d1d1f;
-  font-weight: 700;
-}
-
-/* ============================================================
    RECENT ANALYSES
    ============================================================ */
 
 .dashboard__recent-card {
   padding: var(--space-lg) var(--space-xl) !important;
+  margin-bottom: var(--space-xl);
 }
 
 .dashboard__recent-header {
@@ -465,11 +393,36 @@
 }
 
 /* ============================================================
-   RISK ALERTS
+   RISK ALERTS — Full Width
    ============================================================ */
 
 .dashboard__risks-card {
   padding: var(--space-lg) var(--space-xl) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard__risks-card .dashboard__risk-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.dashboard__risks-card .dashboard__risk-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dashboard__risks-card .dashboard__risk-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard__risks-card .dashboard__risk-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.dashboard__risks-card .dashboard__risk-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .dashboard__risk-list {
@@ -477,7 +430,6 @@
   flex-direction: column;
   gap: var(--space-sm);
 }
-
 
 .dashboard__risk-item {
   display: flex;
@@ -529,60 +481,58 @@
 }
 
 /* ============================================================
-   QUICK ACTIONS
+   QUICK ACTIONS — 3 Card Row
    ============================================================ */
 
-.dashboard__actions-card {
-  padding: var(--space-lg) var(--space-xl) !important;
+.dashboard__actions-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
 }
 
-.dashboard__quick-actions {
+.dashboard__action-card {
+  padding: var(--space-xl) !important;
+  transition: transform 0.2s var(--ease-out-quad), box-shadow 0.3s var(--ease-out-quad);
+}
+
+.dashboard__action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard__action-link {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.dashboard__quick-action {
-  display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-md);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
   text-decoration: none;
-  transition: background-color 0.2s, transform 0.15s;
+  padding: var(--space-lg) 0;
 }
 
-.dashboard__quick-action:hover {
-  background: #f5f5f7;
-  opacity: 1;
-}
-
-.dashboard__quick-action:active {
-  transform: scale(0.98);
-}
-
-.dashboard__qa-icon {
+.dashboard__action-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  border-radius: var(--radius-sm);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
   background: #f5f5f7;
   color: #1d1d1f;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
 }
 
-.dashboard__quick-action:hover .dashboard__qa-icon {
+.dashboard__action-card:hover .dashboard__action-icon {
   background: #1d1d1f;
   color: #ffffff;
+  transform: scale(1.1);
 }
 
-.dashboard__qa-label {
+.dashboard__action-label {
   font-size: var(--text-body-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: #1d1d1f;
+  text-align: center;
 }
 
 /* ============================================================
@@ -677,11 +627,15 @@
    ============================================================ */
 
 @media (max-width: 1024px) {
-  .dashboard__grid {
+  .dashboard__main-row {
     grid-template-columns: 1fr;
   }
 
   .dashboard__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard__actions-row {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -705,6 +659,10 @@
   }
 
   .dashboard__categories {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__actions-row {
     grid-template-columns: 1fr;
   }
 }
