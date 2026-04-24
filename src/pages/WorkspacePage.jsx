@@ -194,14 +194,27 @@ function WorkspacePage() {
 
                 {!file ? (
                   <div className="workspace__dropzone-empty">
+                    {/* Animated Border SVG */}
+                    <svg className="workspace__dropzone-border-svg" width="100%" height="100%">
+                      <defs>
+                        <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#4F8CFF" />
+                          <stop offset="50%" stopColor="#7AA2FF" />
+                          <stop offset="100%" stopColor="#4F8CFF" />
+                        </linearGradient>
+                      </defs>
+                      <rect className="workspace__dropzone-border-rect" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="24" ry="24" />
+                    </svg>
+
                     <div className="workspace__dropzone-icon">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg className="workspace__upload-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path className="workspace__upload-arrow" d="M12 3v12m0-12l-4 4m4-4l4 4" />
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="17 8 12 3 7 8" />
-                        <line x1="12" y1="3" x2="12" y2="15" />
                       </svg>
                     </div>
-                    <h3 className="workspace__dropzone-title">Drop your policy here</h3>
+                    <h3 className="workspace__dropzone-title">
+                      {dragOver ? "Release to upload" : "Drop your policy. Let AI do the headache."}
+                    </h3>
                     <p className="workspace__dropzone-sub">or click to browse files</p>
                     <div className="workspace__dropzone-formats">
                       <span>PDF</span><span>PNG</span><span>JPG</span><span>TXT</span>
@@ -282,7 +295,8 @@ function WorkspacePage() {
           {/* ── PROCESSING STATE ── */}
           {state === 'processing' && (
             <div className="workspace__processing">
-              <Card variant="lifted" className="workspace__processing-card">
+              <div className="workspace__processing-card">
+                <h2 className="workspace__ai-thinking">AI is thinking...</h2>
                 <div className="workspace__processing-visual">
                   <Loader variant="orb" />
                 </div>
@@ -296,7 +310,7 @@ function WorkspacePage() {
                 <p className="workspace__processing-file">
                   Analyzing <strong>{file?.name}</strong>
                 </p>
-              </Card>
+              </div>
             </div>
           )}
 
