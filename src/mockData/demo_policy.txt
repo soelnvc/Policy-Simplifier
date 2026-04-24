@@ -1,0 +1,25 @@
+INSURANCE POLICY: PREMIUM AUTO PROTECTION
+Policy Number: PAP-99283-X
+Policyholder: Sample User
+Term: 12 Months
+
+SECTION 1: COVERAGES
+- Bodily Injury Liability: $100,000 per person / $300,000 per accident
+- Property Damage Liability: $50,000
+- Medical Payments: $5,000
+- Collision: $500 Deductible
+- Comprehensive: $250 Deductible
+
+SECTION 2: EXCLUSIONS
+- Intentional damage is NOT covered.
+- Racing or professional competition is NOT covered.
+- Using the vehicle for commercial delivery (e.g., Uber/Lyft) without an endorsement is NOT covered.
+- Wear and tear, mechanical breakdown, and tire damage are NOT covered.
+
+SECTION 3: CONDITIONS
+- Subrogation: If we pay for a loss, we may take over your right to recover from others.
+- Pro Rata: If you cancel mid-term, we will refund the unused premium proportionally.
+
+SECTION 4: DEFINITIONS
+- "You" and "Your" refers to the named insured.
+- "We", "Us" and "Our" refers to the insurance company.

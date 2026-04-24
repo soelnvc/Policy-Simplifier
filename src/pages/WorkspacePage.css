@@ -56,20 +56,35 @@
 
 /* ── Header ── */
 .workspace__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-lg);
+  width: 100%;
   margin-bottom: var(--space-3xl);
+  padding: var(--space-xl) 0;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   animation: fadeInUp 0.8s ease-out both;
 }
 
+.workspace__header-content {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-xl);
+}
+
 .workspace__title {
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.15;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 4px;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #4F8CFF 0%, #27ae60 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .workspace__subtitle {
@@ -233,10 +248,44 @@
   border-radius: var(--radius-pill);
 }
 
+.workspace__dropzone-sample-btn {
+  margin-top: var(--space-xl);
+  padding: 10px 24px;
+  background: rgba(79, 140, 255, 0.05);
+  border: 1px solid rgba(79, 140, 255, 0.15);
+  border-radius: var(--radius-pill);
+  color: #4F8CFF;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.workspace__dropzone-sample-btn:hover {
+  background: rgba(79, 140, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 140, 255, 0.1);
+  border-color: rgba(79, 140, 255, 0.3);
+}
+
 .workspace__dropzone-limit {
   font-size: var(--text-caption);
   color: #a1a1a6;
   margin-top: var(--space-xs);
+}
+
+.workspace__dropzone-security {
+  font-size: 11px;
+  color: #6e6e73;
+  margin-top: var(--space-md);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
 }
 
 /* File preview */
