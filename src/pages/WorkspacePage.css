@@ -127,23 +127,13 @@
   overflow: hidden;
 }
 
-.workspace__dropzone:hover {
-  background: rgba(255, 255, 255, 0.35);
-  box-shadow: 
-    0 50px 80px -20px rgba(0, 0, 0, 0.15), 
-    0 0 50px rgba(79, 140, 255, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
-}
-
 .workspace__dropzone--active {
-  transform: scale(1.02) !important;
   background: rgba(79, 140, 255, 0.08) !important;
   backdrop-filter: blur(20px);
   box-shadow: 
     0 30px 60px rgba(0, 0, 0, 0.15), 
     0 0 40px rgba(79, 140, 255, 0.4) !important;
   transition: all 0.15s ease-out !important;
-  animation: none !important;
 }
 
 .workspace__dropzone--has-file {

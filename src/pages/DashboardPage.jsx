@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
@@ -144,12 +145,34 @@ function DashboardPage() {
 
   const isEmpty = !data;
 
+  const containerVariants = {
+    initial: { opacity: 0 },
+    animate: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
   return (
     <div className="theme-main page-content page-enter">
       <div className="dashboard">
-        <div className="container">
+        <motion.div 
+          className="container"
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+        >
           {/* Header */}
-          <div className="dashboard__header">
+          <motion.div className="dashboard__header" variants={itemVariants}>
             <div>
               <p className="text-overline" style={{ marginBottom: '0.25rem' }}>DASHBOARD</p>
               <h1 className="dashboard__title">Welcome back, {firstName}</h1>
@@ -164,11 +187,11 @@ function DashboardPage() {
                 New Analysis
               </Button>
             </Link>
-          </div>
+          </motion.div>
 
           {/* ── Empty State ── */}
           {isEmpty ? (
-            <div className="dashboard__empty">
+            <motion.div className="dashboard__empty" variants={itemVariants}>
               <Card variant="lifted" className="dashboard__empty-card">
                 <div className="dashboard__empty-icon">
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
@@ -225,59 +248,35 @@ function DashboardPage() {
                   </div>
                 </div>
               </Card>
-            </div>
+            </motion.div>
           ) : (
             <>
               {/* ── Stats Row ── */}
               <div className="dashboard__stats">
-                <Card variant="lifted" className="dashboard__stat-card">
-                  <div className="dashboard__stat-content">
-                    <p className="dashboard__stat-label">Policies Analyzed</p>
-                    <p className="dashboard__stat-value">{data.stats.totalPolicies}</p>
-                  </div>
-                  <div className="dashboard__stat-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  </div>
-                </Card>
-                <Card variant="lifted" className="dashboard__stat-card">
-                  <div className="dashboard__stat-content">
-                    <p className="dashboard__stat-label">Avg. Coverage</p>
-                    <p className="dashboard__stat-value">{data.stats.avgCoverage}%</p>
-                  </div>
-                  <div className="dashboard__stat-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                  </div>
-                </Card>
-                <Card variant="lifted" className="dashboard__stat-card">
-                  <div className="dashboard__stat-content">
-                    <p className="dashboard__stat-label">Open Risks</p>
-                    <p className="dashboard__stat-value dashboard__stat-value--risk">{data.stats.openRisks}</p>
-                  </div>
-                  <div className="dashboard__stat-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                    </svg>
-                  </div>
-                </Card>
-                <Card variant="lifted" className="dashboard__stat-card">
-                  <div className="dashboard__stat-content">
-                    <p className="dashboard__stat-label">Est. Savings Found</p>
-                    <p className="dashboard__stat-value dashboard__stat-value--green">{data.stats.totalSaved}</p>
-                  </div>
-                  <div className="dashboard__stat-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>
-                    </svg>
-                  </div>
-                </Card>
+                {[
+                  { label: 'Policies Analyzed', value: data.stats.totalPolicies, icon: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
+                  { label: 'Avg. Coverage', value: `${data.stats.avgCoverage}%`, icon: <><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></> },
+                  { label: 'Open Risks', value: data.stats.openRisks, colorClass: 'dashboard__stat-value--risk', icon: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/> },
+                  { label: 'Est. Savings Found', value: data.stats.totalSaved, colorClass: 'dashboard__stat-value--green', icon: <><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></> }
+                ].map((stat, i) => (
+                  <motion.div key={i} variants={itemVariants} style={{ height: '100%' }}>
+                    <Card variant="lifted" className="dashboard__stat-card">
+                      <div className="dashboard__stat-content">
+                        <p className="dashboard__stat-label">{stat.label}</p>
+                        <p className={`dashboard__stat-value ${stat.colorClass || ''}`}>{stat.value}</p>
+                      </div>
+                      <div className="dashboard__stat-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                          {stat.icon}
+                        </svg>
+                      </div>
+                    </Card>
+                  </motion.div>
+                ))}
               </div>
 
               {/* ── Main Row: Portfolio Health + Top Risks ── */}
-              <div className="dashboard__main-row">
+              <motion.div className="dashboard__main-row" variants={itemVariants}>
                 {/* Portfolio Health Card (larger) */}
                 <Card variant="lifted" className="dashboard__portfolio-card">
                   <div className="dashboard__portfolio-top">
@@ -360,89 +359,106 @@ function DashboardPage() {
                     </div>
                   )}
                 </Card>
-              </div>
+              </motion.div>
 
               {/* ── Recent Analyses — Full Width ── */}
-              <Card variant="lifted" className="dashboard__recent-card">
-                <div className="dashboard__recent-header">
-                  <p className="text-overline">RECENT ANALYSES</p>
-                  <Link to="/policies" className="dashboard__see-all">View all</Link>
-                </div>
-                <div className="dashboard__recent-list">
-                  {data.recentAnalyses.map((analysis) => (
-                    <div 
-                      key={analysis.id} 
-                      className="dashboard__recent-item dashboard__recent-item--clickable"
-                      onClick={() => handleViewPolicy(analysis)}
-                    >
-                      <div className="dashboard__recent-score-ring">
-                        <svg viewBox="0 0 36 36" className="dashboard__mini-dial">
-                          <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="3" />
-                          <circle
-                            cx="18" cy="18" r="15"
-                            fill="none"
-                            stroke={analysis.coverageScore >= 80 ? '#2ecc71' : analysis.coverageScore >= 60 ? '#f39c12' : '#e74c3c'}
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeDasharray={`${((analysis.coverageScore || 0) / 100) * 94.2} 94.2`}
-                            transform="rotate(-90 18 18)"
-                          />
-                        </svg>
-                        <span className="dashboard__mini-score">{analysis.coverageScore || 0}</span>
-                      </div>
-                      <div className="dashboard__recent-info">
-                        <p className="dashboard__recent-name">{analysis.policyOverview?.name || 'Unknown Policy'}</p>
-                        <p className="dashboard__recent-meta">{analysis.policyOverview?.type || 'Standard'} · {analysis.capturedDate || 'Recent'}</p>
-                      </div>
-                      <div className="dashboard__recent-actions">
-                        {(analysis.riskFlags?.length || 0) > 0 && (
-                          <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
-                        )}
-                        <button 
-                          className="dashboard__recent-delete"
-                          onClick={(e) => initiateDelete(e, analysis.id)}
-                          aria-label="Delete analysis"
-                        >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <motion.div variants={itemVariants}>
+                <Card variant="lifted" className="dashboard__recent-card">
+                  <div className="dashboard__recent-header">
+                    <p className="text-overline">RECENT ANALYSES</p>
+                    <Link to="/policies" className="dashboard__see-all">View all</Link>
+                  </div>
+                  <div className="dashboard__recent-list">
+                    {data.recentAnalyses.map((analysis) => (
+                      <div 
+                        key={analysis.id} 
+                        className="dashboard__recent-item dashboard__recent-item--clickable"
+                        onClick={() => handleViewPolicy(analysis)}
+                      >
+                        <div className="dashboard__recent-score-ring">
+                          <svg viewBox="0 0 36 36" className="dashboard__mini-dial">
+                            <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="3" />
+                            <circle
+                              cx="18" cy="18" r="15"
+                              fill="none"
+                              stroke={analysis.coverageScore >= 80 ? '#2ecc71' : analysis.coverageScore >= 60 ? '#f39c12' : '#e74c3c'}
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeDasharray={`${((analysis.coverageScore || 0) / 100) * 94.2} 94.2`}
+                              transform="rotate(-90 18 18)"
+                            />
                           </svg>
-                        </button>
+                          <span className="dashboard__mini-score">{analysis.coverageScore || 0}</span>
+                        </div>
+                        <div className="dashboard__recent-info">
+                          <p className="dashboard__recent-name">{analysis.policyOverview?.name || 'Unknown Policy'}</p>
+                          <p className="dashboard__recent-meta">{analysis.policyOverview?.type || 'Standard'} · {analysis.capturedDate || 'Recent'}</p>
+                        </div>
+                        <div className="dashboard__recent-actions">
+                          {(analysis.riskFlags?.length || 0) > 0 && (
+                            <span className="dashboard__recent-risks">{analysis.riskFlags.length} risks</span>
+                          )}
+                          <button 
+                            className="dashboard__recent-delete"
+                            onClick={(e) => initiateDelete(e, analysis.id)}
+                            aria-label="Delete analysis"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
 
               {/* ── Quick Actions — 3 Cards Row ── */}
               <div className="dashboard__actions-row">
-                <Card variant="lifted" className="dashboard__action-card">
-                  <Link to="/workspace" className="dashboard__action-link">
-                    <span className="dashboard__action-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                    </span>
-                    <span className="dashboard__action-label">Upload New Policy</span>
-                  </Link>
-                </Card>
-                <Card variant="lifted" className="dashboard__action-card">
-                  <Link to="/compare" className="dashboard__action-link">
-                    <span className="dashboard__action-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="8" height="16" rx="1" /><rect x="14" y="4" width="8" height="16" rx="1" /></svg>
-                    </span>
-                    <span className="dashboard__action-label">Compare Policies</span>
-                  </Link>
-                </Card>
-                <Card variant="lifted" className="dashboard__action-card">
-                  <Link to="/policies" className="dashboard__action-link">
-                    <span className="dashboard__action-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
-                    </span>
-                    <span className="dashboard__action-label">View All Policies</span>
-                  </Link>
-                </Card>
+                {[
+                  { 
+                    to: "/workspace", 
+                    label: "Upload New Policy", 
+                    icon: (
+                      <>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                      </>
+                    )
+                  },
+                  { to: "/compare", label: "Compare Policies", icon: <><rect x="2" y="4" width="8" height="16" rx="1" /><rect x="14" y="4" width="8" height="16" rx="1" /></> },
+                  { 
+                    to: "/policies", 
+                    label: "View All Policies", 
+                    icon: (
+                      <>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                      </>
+                    )
+                  }
+                ].map((action, i) => (
+                  <motion.div key={i} variants={itemVariants} style={{ height: '100%' }}>
+                    <Card variant="lifted" className="dashboard__action-card">
+                      <Link to={action.to} className="dashboard__action-link">
+                        <span className="dashboard__action-icon">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                            {action.icon}
+                          </svg>
+                        </span>
+                        <span className="dashboard__action-label">{action.label}</span>
+                      </Link>
+                    </Card>
+                  </motion.div>
+                ))}
               </div>
             </>
           )}
-        </div>
+        </motion.div>
       </div>
 
       <ConfirmModal 

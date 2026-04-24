@@ -222,12 +222,19 @@ function WorkspacePage() {
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={!file ? handleBrowse : undefined}
+                  animate={{ 
+                    y: dragOver ? -16 : 0,
+                    scale: dragOver ? 1.02 : 1,
+                    boxShadow: dragOver 
+                      ? "0 50px 80px -20px rgba(0, 0, 0, 0.15), 0 0 50px rgba(79, 140, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset" 
+                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 0 0px rgba(79, 140, 255, 0), 0 0 0 1px rgba(255, 255, 255, 0.4) inset"
+                  }}
                   whileHover={{ 
                     y: -16, 
                     scale: 1.02,
-                    boxShadow: "0 50px 80px -20px rgba(0, 0, 0, 0.15), 0 0 50px rgba(79, 140, 255, 0.25)"
+                    boxShadow: "0 50px 80px -20px rgba(0, 0, 0, 0.15), 0 0 50px rgba(79, 140, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6) inset"
                   }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 25 }}
                 >
                   <input
                     ref={fileInputRef}

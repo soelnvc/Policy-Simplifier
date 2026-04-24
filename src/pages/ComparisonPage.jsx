@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
@@ -116,15 +117,37 @@ function ComparisonPage() {
     setActiveTab('coverage');
   };
 
+  const containerVariants = {
+    initial: { opacity: 0 },
+    animate: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
   const bothSelected = policyA.file && policyB.file;
 
   // ── Render ──
   return (
     <div className="theme-main page-content page-enter">
       <div className="compare">
-        <div className="container">
+        <motion.div 
+          className="container"
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+        >
           {/* Header */}
-          <div className="compare__header">
+          <motion.div className="compare__header" variants={itemVariants}>
             <div>
               <p className="text-overline" style={{ marginBottom: '0.25rem' }}>POLICY COMPARISON</p>
               <h1 className="compare__title">
@@ -145,12 +168,12 @@ function ComparisonPage() {
                 New Comparison
               </Button>
             )}
-          </div>
+          </motion.div>
 
           {/* ── Upload Slots ── */}
           {!showResults && (
             <>
-              <div className="compare__slots">
+              <motion.div className="compare__slots" variants={itemVariants}>
                 {/* Slot A */}
                 <UploadSlot
                   label="Policy A"
@@ -181,10 +204,10 @@ function ComparisonPage() {
                   progressLabel={progressLabel.b}
                 />
                 <input ref={fileRefB} type="file" accept=".pdf,.png,.jpg,.jpeg,.txt" onChange={(e) => handleFile('b', e.target.files[0])} hidden />
-              </div>
+              </motion.div>
 
               {bothSelected && !comparing && (
-                <div className="compare__actions">
+                <motion.div className="compare__actions" variants={itemVariants}>
                   <Button variant="primary" size="lg" onClick={startComparison} icon={
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                       <rect x="2" y="4" width="8" height="16" rx="1" /><rect x="14" y="4" width="8" height="16" rx="1" />
@@ -192,12 +215,12 @@ function ComparisonPage() {
                   }>
                     Compare Policies
                   </Button>
-                </div>
+                </motion.div>
               )}
 
               {/* ── Comparison History ── */}
               {!comparing && history.length > 0 && (
-                <div className="compare__history">
+                <motion.div className="compare__history" variants={itemVariants}>
                   <div className="compare__history-header">
                     <p className="text-overline">RECENT COMPARISONS</p>
                     <span className="compare__history-disclaimer">Cleared after 30 days</span>
@@ -229,7 +252,7 @@ function ComparisonPage() {
                       </Card>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {loadingHistory && !history.length && (
@@ -242,7 +265,7 @@ function ComparisonPage() {
 
           {/* ── Results ── */}
           {showResults && policyA.analysis && policyB.analysis && (
-            <div className="compare__results">
+            <motion.div className="compare__results" variants={itemVariants}>
               {/* Score Comparison */}
               <div className="compare__scores">
                 <ScoreCard
@@ -406,9 +429,9 @@ function ComparisonPage() {
                   }
                 </p>
               </Card>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
