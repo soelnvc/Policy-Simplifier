@@ -461,6 +461,7 @@
   background: linear-gradient(90deg, #4F8CFF, #7AA2FF, #4F8CFF);
   background-size: 200% auto;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shimmer 3s linear infinite;
   margin-bottom: var(--space-md);
