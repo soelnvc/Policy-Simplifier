@@ -216,12 +216,18 @@ function WorkspacePage() {
               {/* Pulse Wrapper for independent animation */}
               <div className="workspace__dropzone-wrapper">
                 {/* Drop Zone */}
-                <div
+                <motion.div
                   className={`workspace__dropzone ${dragOver ? 'workspace__dropzone--active' : ''} ${file ? 'workspace__dropzone--has-file' : ''}`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={!file ? handleBrowse : undefined}
+                  whileHover={{ 
+                    y: -16, 
+                    scale: 1.02,
+                    boxShadow: "0 50px 80px -20px rgba(0, 0, 0, 0.15), 0 0 50px rgba(79, 140, 255, 0.25)"
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   <input
                     ref={fileInputRef}
@@ -300,7 +306,7 @@ function WorkspacePage() {
                       </button>
                     </div>
                   )}
-                </div>
+                </motion.div>
               </div>
 
               {error && <div className="workspace__error">{error}</div>}
