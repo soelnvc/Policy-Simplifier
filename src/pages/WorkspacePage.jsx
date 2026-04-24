@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
@@ -149,10 +150,19 @@ function WorkspacePage() {
     <div className="theme-main page-content page-enter">
       <div className="workspace">
         {/* Header - Full Width Banner */}
-        <div className="workspace__header">
+        <motion.div 
+          className="workspace__header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div className="container">
             <div className="workspace__header-content">
-              <div>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <p className="text-overline" style={{ marginBottom: '0.25rem' }}>ANALYSIS WORKSPACE</p>
                 <h1 className="workspace__title">
                   {state === 'upload' && (
@@ -166,7 +176,7 @@ function WorkspacePage() {
                     Upload an insurance policy document and our AI will break it down into clear, structured insights.
                   </p>
                 )}
-              </div>
+              </motion.div>
               {state === 'results' && (
                 <div className="workspace__actions-group" style={{ display: 'flex', gap: '8px' }}>
                   {analysis?.id && (
@@ -192,12 +202,17 @@ function WorkspacePage() {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="container">
           {/* ── UPLOAD STATE ── */}
           {state === 'upload' && (
-            <div className="workspace__upload-area">
+            <motion.div 
+              className="workspace__upload-area"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
               {/* Pulse Wrapper for independent animation */}
               <div className="workspace__dropzone-wrapper">
                 {/* Drop Zone */}
@@ -304,38 +319,109 @@ function WorkspacePage() {
 
               {/* Feature hints */}
               <div className="workspace__hints">
-                <div className="workspace__hint">
-                  <div className="workspace__hint-icon workspace__hint-icon--green">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-                  </div>
-                  <div>
-                    <p className="workspace__hint-title">Coverage Analysis</p>
-                    <p className="workspace__hint-desc">What's covered and what's not!</p>
-                    <p className="workspace__hint-preview">AI scans for medical, liability, and property limits instantly.</p>
-                  </div>
-                </div>
-                <div className="workspace__hint">
-                  <div className="workspace__hint-icon workspace__hint-icon--red">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-                  </div>
-                  <div>
-                    <p className="workspace__hint-title">Risk Flags</p>
-                    <p className="workspace__hint-desc">Hidden dangers in fine print!</p>
-                    <p className="workspace__hint-preview">Identify exclusions and tricky clauses before you sign.</p>
-                  </div>
-                </div>
-                <div className="workspace__hint">
-                  <div className="workspace__hint-icon workspace__hint-icon--blue">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-                  </div>
-                  <div>
-                    <p className="workspace__hint-title">Terms Decoded</p>
-                    <p className="workspace__hint-desc">Jargon to plain English for your ease!</p>
-                    <p className="workspace__hint-preview">"Pro rata", "Subrogation", and more translated for humans.</p>
-                  </div>
-                </div>
+                {[
+                  {
+                    id: 'coverage',
+                    title: 'Coverage Analysis',
+                    desc: "What's covered and what's not!",
+                    preview: 'AI scans for medical, liability, and property limits instantly.',
+                    color: 'green',
+                    icon: <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  },
+                  {
+                    id: 'risks',
+                    title: 'Risk Flags',
+                    desc: 'Hidden dangers in fine print!',
+                    preview: 'Identify exclusions and tricky clauses before you sign.',
+                    color: 'red',
+                    icon: (
+                      <>
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                      </>
+                    )
+                  },
+                  {
+                    id: 'terms',
+                    title: 'Terms Decoded',
+                    desc: 'Jargon to plain English for your ease!',
+                    preview: '"Pro rata", "Subrogation", and more translated for humans.',
+                    color: 'blue',
+                    icon: <><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></>
+                  }
+                ].map((hint, idx) => {
+                  const cardVariants = {
+                    initial: { opacity: 0, y: 20 },
+                    animate: { 
+                      opacity: 1, 
+                      y: 0,
+                      transition: { 
+                        delay: 0.4 + (idx * 0.1), 
+                        duration: 0.8, 
+                        ease: [0.23, 1, 0.32, 1] 
+                      }
+                    },
+                    hover: { 
+                      y: -12, 
+                      scale: 1.02,
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      borderColor: "rgba(255, 255, 255, 0.9)",
+                      boxShadow: "0 25px 60px rgba(0, 0, 0, 0.1)",
+                      transition: { 
+                        duration: 0.4, 
+                        ease: [0.25, 1, 0.5, 1], // Physics-like feel
+                        delay: 0 // Ensure no delay on hover
+                      }
+                    }
+                  };
+
+                  const contentVariants = {
+                    initial: { height: 0, opacity: 0, marginTop: 0 },
+                    hover: { 
+                      height: 'auto', 
+                      opacity: 1, 
+                      marginTop: 12,
+                      transition: { duration: 0.3, ease: "easeOut" }
+                    }
+                  };
+
+                  return (
+                    <motion.div 
+                      key={hint.id}
+                      className="workspace__hint"
+                      variants={cardVariants}
+                      initial="initial"
+                      animate="animate"
+                      whileHover="hover"
+                    >
+                      <motion.div 
+                        className={`workspace__hint-icon workspace__hint-icon--${hint.color}`}
+                        variants={{
+                          hover: { scale: 1.1, rotate: -5 }
+                        }}
+                      >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          {hint.icon}
+                        </svg>
+                      </motion.div>
+                      <div>
+                        <p className="workspace__hint-title">{hint.title}</p>
+                        <p className="workspace__hint-desc">{hint.desc}</p>
+                        <div className="workspace__hint-preview-container">
+                          <motion.p 
+                            className="workspace__hint-preview"
+                            variants={contentVariants}
+                          >
+                            {hint.preview}
+                          </motion.p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ── PROCESSING STATE ── */}
