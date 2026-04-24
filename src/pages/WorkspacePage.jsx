@@ -176,73 +176,76 @@ function WorkspacePage() {
           {/* ── UPLOAD STATE ── */}
           {state === 'upload' && (
             <div className="workspace__upload-area">
-              {/* Drop Zone */}
-              <div
-                className={`workspace__dropzone ${dragOver ? 'workspace__dropzone--active' : ''} ${file ? 'workspace__dropzone--has-file' : ''}`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={!file ? handleBrowse : undefined}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".pdf,.png,.jpg,.jpeg,.txt"
-                  onChange={handleInputChange}
-                  hidden
-                />
+              {/* Pulse Wrapper for independent animation */}
+              <div className="workspace__dropzone-wrapper">
+                {/* Drop Zone */}
+                <div
+                  className={`workspace__dropzone ${dragOver ? 'workspace__dropzone--active' : ''} ${file ? 'workspace__dropzone--has-file' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={!file ? handleBrowse : undefined}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.png,.jpg,.jpeg,.txt"
+                    onChange={handleInputChange}
+                    hidden
+                  />
 
-                {!file ? (
-                  <div className="workspace__dropzone-empty">
-                    {/* Animated Border SVG */}
-                    <svg className="workspace__dropzone-border-svg" width="100%" height="100%">
-                      <defs>
-                        <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#4F8CFF" />
-                          <stop offset="50%" stopColor="#7AA2FF" />
-                          <stop offset="100%" stopColor="#4F8CFF" />
-                        </linearGradient>
-                      </defs>
-                      <rect className="workspace__dropzone-border-rect" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="24" ry="24" />
-                    </svg>
+                  {!file ? (
+                    <div className="workspace__dropzone-empty">
+                      {/* Animated Border SVG */}
+                      <svg className="workspace__dropzone-border-svg" width="100%" height="100%">
+                        <defs>
+                          <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#4F8CFF" />
+                            <stop offset="50%" stopColor="#7AA2FF" />
+                            <stop offset="100%" stopColor="#4F8CFF" />
+                          </linearGradient>
+                        </defs>
+                        <rect className="workspace__dropzone-border-rect" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="24" ry="24" />
+                      </svg>
 
-                    <div className="workspace__dropzone-icon">
-                      <svg className="workspace__upload-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path className="workspace__upload-arrow" d="M12 3v12m0-12l-4 4m4-4l4 4" />
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      </svg>
+                      <div className="workspace__dropzone-icon">
+                        <svg className="workspace__upload-icon-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path className="workspace__upload-arrow" d="M12 3v12m0-12l-4 4m4-4l4 4" />
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        </svg>
+                      </div>
+                      <h3 className="workspace__dropzone-title">
+                        {dragOver ? "Release to upload" : "Drop your policy. Let AI do the headache."}
+                      </h3>
+                      <p className="workspace__dropzone-sub">or click to browse files</p>
+                      <div className="workspace__dropzone-formats">
+                        <span>PDF</span><span>PNG</span><span>JPG</span><span>TXT</span>
+                      </div>
+                      <p className="workspace__dropzone-limit">Max 25 MB</p>
                     </div>
-                    <h3 className="workspace__dropzone-title">
-                      {dragOver ? "Release to upload" : "Drop your policy. Let AI do the headache."}
-                    </h3>
-                    <p className="workspace__dropzone-sub">or click to browse files</p>
-                    <div className="workspace__dropzone-formats">
-                      <span>PDF</span><span>PNG</span><span>JPG</span><span>TXT</span>
+                  ) : (
+                    <div className="workspace__file-preview">
+                      <div className="workspace__file-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                          <polyline points="14 2 14 8 20 8" />
+                          <line x1="16" y1="13" x2="8" y2="13" />
+                          <line x1="16" y1="17" x2="8" y2="17" />
+                          <line x1="10" y1="9" x2="8" y2="9" />
+                        </svg>
+                      </div>
+                      <div className="workspace__file-info">
+                        <p className="workspace__file-name">{file.name}</p>
+                        <p className="workspace__file-size">{formatFileSize(file.size)}</p>
+                      </div>
+                      <button className="workspace__file-remove" onClick={(e) => { e.stopPropagation(); removeFile(); }} aria-label="Remove file">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                      </button>
                     </div>
-                    <p className="workspace__dropzone-limit">Max 25 MB</p>
-                  </div>
-                ) : (
-                  <div className="workspace__file-preview">
-                    <div className="workspace__file-icon">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="16" y1="13" x2="8" y2="13" />
-                        <line x1="16" y1="17" x2="8" y2="17" />
-                        <line x1="10" y1="9" x2="8" y2="9" />
-                      </svg>
-                    </div>
-                    <div className="workspace__file-info">
-                      <p className="workspace__file-name">{file.name}</p>
-                      <p className="workspace__file-size">{formatFileSize(file.size)}</p>
-                    </div>
-                    <button className="workspace__file-remove" onClick={(e) => { e.stopPropagation(); removeFile(); }} aria-label="Remove file">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                    </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               {error && <div className="workspace__error">{error}</div>}
@@ -262,30 +265,33 @@ function WorkspacePage() {
               {/* Feature hints */}
               <div className="workspace__hints">
                 <div className="workspace__hint">
-                  <div className="workspace__hint-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                  <div className="workspace__hint-icon workspace__hint-icon--green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                   </div>
                   <div>
                     <p className="workspace__hint-title">Coverage Analysis</p>
-                    <p className="workspace__hint-desc">What's covered and what's not</p>
+                    <p className="workspace__hint-desc">What's covered and what's not!</p>
+                    <p className="workspace__hint-preview">AI scans for medical, liability, and property limits instantly.</p>
                   </div>
                 </div>
                 <div className="workspace__hint">
-                  <div className="workspace__hint-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+                  <div className="workspace__hint-icon workspace__hint-icon--red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
                   </div>
                   <div>
                     <p className="workspace__hint-title">Risk Flags</p>
-                    <p className="workspace__hint-desc">Hidden dangers in the fine print</p>
+                    <p className="workspace__hint-desc">Hidden dangers in fine print!</p>
+                    <p className="workspace__hint-preview">Identify exclusions and tricky clauses before you sign.</p>
                   </div>
                 </div>
                 <div className="workspace__hint">
-                  <div className="workspace__hint-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+                  <div className="workspace__hint-icon workspace__hint-icon--blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
                   </div>
                   <div>
                     <p className="workspace__hint-title">Terms Decoded</p>
-                    <p className="workspace__hint-desc">Jargon translated to plain English</p>
+                    <p className="workspace__hint-desc">Jargon to plain English for your ease!</p>
+                    <p className="workspace__hint-preview">"Pro rata", "Subrogation", and more translated for humans.</p>
                   </div>
                 </div>
               </div>
