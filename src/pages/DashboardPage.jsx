@@ -165,29 +165,41 @@ function DashboardPage() {
   return (
     <div className="theme-main page-content page-enter">
       <div className="dashboard">
+        {/* Full-Width Header Banner */}
+        <motion.div 
+          className="dashboard__banner"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="container">
+            <div className="dashboard__header">
+              <div>
+                <p className="text-overline" style={{ marginBottom: '0.25rem' }}>DASHBOARD</p>
+                <h1 className="dashboard__title">
+                  Welcome back, <span className="text-gradient--spectrum">{firstName}</span>
+                </h1>
+                <p className="dashboard__subtitle">
+                  {isEmpty ? 'Your insurance portfolio is waiting to be built.' : "Here's an overview of your insurance portfolio."}
+                </p>
+              </div>
+              <Link to="/workspace">
+                <Button variant="primary" icon={
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                }>
+                  New Analysis
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div 
           className="container"
           variants={containerVariants}
           initial="initial"
           animate="animate"
         >
-          {/* Header */}
-          <motion.div className="dashboard__header" variants={itemVariants}>
-            <div>
-              <p className="text-overline" style={{ marginBottom: '0.25rem' }}>DASHBOARD</p>
-              <h1 className="dashboard__title">Welcome back, {firstName}</h1>
-              <p className="dashboard__subtitle">
-                {isEmpty ? 'Your insurance portfolio is waiting to be built.' : "Here's an overview of your insurance portfolio."}
-              </p>
-            </div>
-            <Link to="/workspace">
-              <Button variant="primary" icon={
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-              }>
-                New Analysis
-              </Button>
-            </Link>
-          </motion.div>
 
           {/* ── Empty State ── */}
           {isEmpty ? (

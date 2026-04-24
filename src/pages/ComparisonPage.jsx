@@ -140,36 +140,51 @@ function ComparisonPage() {
   return (
     <div className="theme-main page-content page-enter">
       <div className="compare">
+        {/* Full-Width Header Banner */}
+        <motion.div 
+          className="compare__banner"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="container">
+            <div className="compare__header">
+              <div>
+                <p className="text-overline" style={{ marginBottom: '0.25rem' }}>POLICY COMPARISON</p>
+                <h1 className="compare__title">
+                  {showResults ? (
+                    'Comparison Results'
+                  ) : (
+                    <>
+                      <span className="text-gradient--alt">Compare</span> two policies
+                    </>
+                  )}
+                </h1>
+                <p className="compare__subtitle">
+                  {showResults
+                    ? 'Side-by-side analysis with gap detection.'
+                    : 'Upload two insurance documents and we\'ll highlight the differences, gaps, and which one protects you better.'}
+                </p>
+              </div>
+              {showResults && (
+                <Button variant="secondary" onClick={startOver} icon={
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                  </svg>
+                }>
+                  New Comparison
+                </Button>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div 
           className="container"
           variants={containerVariants}
           initial="initial"
           animate="animate"
         >
-          {/* Header */}
-          <motion.div className="compare__header" variants={itemVariants}>
-            <div>
-              <p className="text-overline" style={{ marginBottom: '0.25rem' }}>POLICY COMPARISON</p>
-              <h1 className="compare__title">
-                {showResults ? 'Comparison Results' : 'Compare two policies'}
-              </h1>
-              <p className="compare__subtitle">
-                {showResults
-                  ? 'Side-by-side analysis with gap detection.'
-                  : 'Upload two insurance documents and we\'ll highlight the differences, gaps, and which one protects you better.'}
-              </p>
-            </div>
-            {showResults && (
-              <Button variant="secondary" onClick={startOver} icon={
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-                </svg>
-              }>
-                New Comparison
-              </Button>
-            )}
-          </motion.div>
-
           {/* ── Upload Slots ── */}
           {!showResults && (
             <>
@@ -442,12 +457,25 @@ function UploadSlot({ label, file, onBrowse, onRemove, onDrop, comparing, progre
   const [dragOver, setDragOver] = React.useState(false);
 
   return (
-    <div
+    <motion.div
       className={`compare__slot ${dragOver ? 'compare__slot--drag' : ''} ${file ? 'compare__slot--has-file' : ''}`}
       onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
       onDragLeave={() => setDragOver(false)}
       onDrop={(e) => { e.preventDefault(); setDragOver(false); onDrop(e.dataTransfer.files[0]); }}
       onClick={!file ? onBrowse : undefined}
+      animate={{ 
+        y: dragOver ? -16 : 0,
+        scale: dragOver ? 1.02 : 1,
+        boxShadow: dragOver 
+          ? "0 50px 80px -20px rgba(0, 0, 0, 0.15), 0 0 50px rgba(79, 140, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset" 
+          : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 0 0px rgba(79, 140, 255, 0), 0 0 0 1px rgba(255, 255, 255, 0.4) inset"
+      }}
+      whileHover={{ 
+        y: -16, 
+        scale: 1.02,
+        boxShadow: "0 50px 80px -20px rgba(0, 0, 0, 0.15), 0 0 50px rgba(79, 140, 255, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6) inset"
+      }}
+      transition={{ type: "spring", stiffness: 260, damping: 25 }}
     >
       <p className="compare__slot-label">{label}</p>
       {!file ? (
@@ -483,7 +511,7 @@ function UploadSlot({ label, file, onBrowse, onRemove, onDrop, comparing, progre
           )}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

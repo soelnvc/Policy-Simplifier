@@ -4,17 +4,27 @@
    ============================================================ */
 
 .compare {
-  padding: var(--space-3xl) 0 var(--space-5xl);
+  padding: 0 0 var(--space-5xl);
   min-height: calc(100vh - var(--navbar-height));
+}
+
+/* ── Full-Width Banner ── */
+.compare__banner {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-3xl);
+  padding: var(--space-xl) 0 var(--space-2xl);
 }
 
 /* ── Header ── */
 .compare__header {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: var(--space-lg);
-  margin-bottom: var(--space-3xl);
+  gap: var(--space-xl);
 }
 
 .compare__title {
@@ -32,6 +42,13 @@
   line-height: 1.6;
 }
 
+.text-gradient--alt {
+  background: linear-gradient(90deg, #FF7EB3 0%, #7AF9FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ============================================================
    UPLOAD SLOTS
    ============================================================ */
@@ -45,27 +62,21 @@
 }
 
 .compare__slot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--space-2xl) var(--space-xl);
-  border: 2px dashed rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  cursor: pointer;
+  position: relative;
+  border: none;
+  border-radius: 28px;
+  padding: var(--space-4xl) var(--space-xl);
   text-align: center;
-  min-height: 200px;
-  justify-content: center;
-  transition:
-    border-color 0.3s,
-    background-color 0.3s,
-    box-shadow 0.3s,
-    transform 0.2s;
-}
-
-.compare__slot:hover {
-  border-color: rgba(0, 0, 0, 0.15);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.4) inset,
+    0 0 20px rgba(255, 255, 255, 0.1) inset;
+  overflow: hidden;
+  transition: background-color 0.3s;
 }
 
 .compare__slot--drag {
