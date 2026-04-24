@@ -154,7 +154,8 @@ body {
   font-weight: 400;
   line-height: var(--leading-normal);
   color: var(--text-primary);
-  background-color: var(--snow);
+  background: linear-gradient(135deg, #F8FAFC 0%, #EEF4FF 100%);
+  background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -588,7 +589,7 @@ a:hover {
   --snow-container-high:#ffffff;
   --snow-pure:          #ffffff;
 
-  background-color: var(--bg-main) !important;
+  background-color: transparent !important;
   font-family: var(--font-main) !important;
   color: #1d1d1f;
   min-height: 100vh;
