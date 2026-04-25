@@ -701,10 +701,21 @@ function WorkspacePage() {
 
           {/* ── RESULTS STATE ── */}
           {state === "results" && analysis && (
-            <div className="workspace__results">
+            <motion.div 
+              className="workspace__results"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               {/* Top Row: Overview + Score */}
               <div className="workspace__results-top">
-                <Card variant="lifted" className="workspace__overview-card">
+                <Card 
+                  variant="lifted" 
+                  className="workspace__overview-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
                   <p
                     className="text-overline"
                     style={{ marginBottom: "var(--space-md)" }}
@@ -765,7 +776,13 @@ function WorkspacePage() {
                   </div>
                 </Card>
 
-                <Card variant="lifted" className="workspace__score-card">
+                <Card 
+                  variant="lifted" 
+                  className="workspace__score-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   <p
                     className="text-overline"
                     style={{
@@ -825,7 +842,13 @@ function WorkspacePage() {
               </div>
 
               {/* Summary */}
-              <Card variant="lifted" className="workspace__summary-card">
+              <Card 
+                variant="lifted" 
+                className="workspace__summary-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
                 <p
                   className="text-overline"
                   style={{ marginBottom: "var(--space-sm)" }}
@@ -1010,7 +1033,7 @@ function WorkspacePage() {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>

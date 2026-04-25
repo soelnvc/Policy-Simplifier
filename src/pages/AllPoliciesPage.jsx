@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import {
   getUserPolicies,
@@ -224,13 +225,24 @@ function AllPoliciesPage() {
           </div>
 
           <div className="all-policies__header">
-            <div>
-              <h1 className="heading-display all-policies__title">Your Policy <span className="text-gradient--blue">Portfolio</span></h1>
-              <p className="subheading-muted all-policies__subtitle">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <h1 className="heading-display all-policies__title">
+                Your Policy <span className="text-gradient--blue">Portfolio</span>
+              </h1>
+              <motion.p 
+                className="subheading-muted all-policies__subtitle"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              >
                 Manage all your analyzed documents and track identified risks
                 over time.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
             {policies.length > 0 && (
               <div className="all-policies__sort-pill">
@@ -324,12 +336,24 @@ function AllPoliciesPage() {
           </div>
         ) : (
           <div className="all-policies__grid">
-            {sortedPolicies.map((policy) => (
+            {sortedPolicies.map((policy, idx) => (
               <Card
                 key={policy.id}
                 variant="lifted"
                 className="all-policies__card"
                 onClick={() => handleViewPolicy(policy)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                whileHover={{ 
+                  y: -8,
+                  boxShadow: "0 12px 30px rgba(0,0,0,0.04), 0 0 20px rgba(255,255,255,0.8)"
+                }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: idx * 0.1,
+                  y: { type: "spring", stiffness: 300, damping: 20 },
+                  boxShadow: { duration: 0.2 }
+                }}
               >
                 <div className="all-policies__card-header">
                   <div className="all-policies__score-wrap">

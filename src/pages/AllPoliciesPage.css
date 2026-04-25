@@ -216,14 +216,12 @@
   gap: var(--space-md);
   position: relative;
   cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.all-policies__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  background: white !important;
+  border: 1px solid rgba(255, 255, 255, 1) !important;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 4px 15px rgba(0, 0, 0, 0.03) !important;
+  border-radius: var(--radius-super) !important;
 }
 
 /* Card Header */
