@@ -272,7 +272,7 @@ function DashboardPage() {
                   { label: 'Est. Savings Found', value: data.stats.totalSaved, colorClass: 'dashboard__stat-value--green', icon: <><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></> }
                 ].map((stat, i) => (
                   <motion.div key={i} variants={itemVariants} style={{ height: '100%' }}>
-                    <Card variant="lifted" className="dashboard__stat-card">
+                    <Card variant="lifted" className="dashboard__stat-card" hoverable={true}>
                       <div className="dashboard__stat-content">
                         <p className="dashboard__stat-label">{stat.label}</p>
                         <p className={`dashboard__stat-value ${stat.colorClass || ''}`}>{stat.value}</p>
@@ -453,20 +453,51 @@ function DashboardPage() {
                       </>
                     )
                   }
-                ].map((action, i) => (
-                  <motion.div key={i} variants={itemVariants} style={{ height: '100%' }}>
-                    <Card variant="lifted" className="dashboard__action-card">
-                      <Link to={action.to} className="dashboard__action-link">
-                        <span className="dashboard__action-icon">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            {action.icon}
-                          </svg>
-                        </span>
-                        <span className="dashboard__action-label">{action.label}</span>
-                      </Link>
-                    </Card>
-                  </motion.div>
-                ))}
+                ].map((action, i) => {
+                  const MotionLink = motion(Link);
+                  const actionCardVariants = {
+                    initial: { y: 0, scale: 1, boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" },
+                    hover: { 
+                      y: -10, 
+                      scale: 1.02,
+                      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                      transition: { type: "spring", stiffness: 400, damping: 25 }
+                    }
+                  };
+
+                  const actionIconVariants = {
+                    initial: { backgroundColor: "#f5f5f7", color: "#1d1d1f" },
+                    hover: { 
+                      backgroundColor: "#1d1d1f", 
+                      color: "#ffffff",
+                      transition: { duration: 0.2 }
+                    }
+                  };
+
+                  return (
+                    <motion.div key={i} variants={itemVariants} style={{ height: '100%' }}>
+                      <Card 
+                        variant="lifted" 
+                        className="dashboard__action-card" 
+                        variants={actionCardVariants}
+                        initial="initial"
+                        whileHover="hover"
+                      >
+                        <MotionLink to={action.to} className="dashboard__action-link">
+                          <motion.span 
+                            className="dashboard__action-icon"
+                            variants={actionIconVariants}
+                          >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              {action.icon}
+                            </svg>
+                          </motion.span>
+                          <span className="dashboard__action-label">{action.label}</span>
+                        </MotionLink>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
               </div>
             </>
           )}

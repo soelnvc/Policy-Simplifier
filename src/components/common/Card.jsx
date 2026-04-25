@@ -1,14 +1,6 @@
-import React from 'react';
+import { motion } from 'framer-motion';
 import './Card.css';
 
-/**
- * Card — Glassmorphic container with the Onyx & Snow layering system.
- * 
- * @param {'glass'|'lifted'|'onyx'|'surface'} variant - Card surface style
- * @param {boolean} hoverable - Adds lift animation on hover
- * @param {boolean} padding - Adds default interior padding
- * @param {string} className - Additional CSS classes
- */
 function Card({
   children,
   variant = 'glass',
@@ -27,10 +19,23 @@ function Card({
     className,
   ].filter(Boolean).join(' ');
 
+  // Default lift interaction if hoverable is true and no whileHover is provided
+  const defaultHover = hoverable ? { 
+    y: -6,
+    scale: 1.01,
+    boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.12)"
+  } : undefined;
+
   return (
-    <div className={classNames} onClick={onClick} {...props}>
+    <motion.div 
+      className={classNames} 
+      onClick={onClick} 
+      whileHover={props.whileHover || defaultHover}
+      transition={props.transition || { type: "spring", stiffness: 300, damping: 20 }}
+      {...props}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 }
 

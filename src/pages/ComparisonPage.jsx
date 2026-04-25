@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../context/ToastContext';
@@ -246,6 +246,7 @@ function ComparisonPage() {
                         key={item.id} 
                         variant="lifted" 
                         className="compare__history-card"
+                        hoverable={true}
                         onClick={() => loadFromHistory(item)}
                       >
                         <div className="compare__history-info">
@@ -341,96 +342,117 @@ function ComparisonPage() {
                 ))}
               </div>
 
-              {/* Coverage Diff */}
-              {activeTab === 'coverage' && (
-                <div className="compare__coverage-diff">
-                  <div className="compare__diff-header">
-                    <span className="compare__diff-col-label">Policy A</span>
-                    <span className="compare__diff-col-label compare__diff-col-label--center">Category</span>
-                    <span className="compare__diff-col-label">Policy B</span>
-                  </div>
-                  {(() => {
-                    const allCategories = [...new Set([
-                      ...policyA.analysis.coverageItems.map(c => c.category),
-                      ...policyB.analysis.coverageItems.map(c => c.category),
-                    ])];
-                    return allCategories.map((cat) => {
-                      const a = policyA.analysis.coverageItems.find(c => c.category === cat);
-                      const b = policyB.analysis.coverageItems.find(c => c.category === cat);
-                      const statusA = a?.status || 'not_covered';
-                      const statusB = b?.status || 'not_covered';
-                      const isDiff = statusA !== statusB;
-                      return (
-                        <div key={cat} className={`compare__diff-row ${isDiff ? 'compare__diff-row--highlight' : ''}`}>
-                          <span className={`compare__diff-badge compare__diff-badge--${statusA}`}>
-                            {statusA === 'covered' ? '✓' : statusA === 'partial' ? '~' : '✗'}
-                          </span>
-                          <span className="compare__diff-category">{cat}</span>
-                          <span className={`compare__diff-badge compare__diff-badge--${statusB}`}>
-                            {statusB === 'covered' ? '✓' : statusB === 'partial' ? '~' : '✗'}
-                          </span>
+              {/* Tab Content with AnimatePresence */}
+              <AnimatePresence mode="wait">
+                {activeTab === 'coverage' && (
+                  <motion.div 
+                    key="coverage"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="compare__coverage-diff"
+                  >
+                    <div className="compare__diff-header">
+                      <span className="compare__diff-col-label">Policy A</span>
+                      <span className="compare__diff-col-label compare__diff-col-label--center">Category</span>
+                      <span className="compare__diff-col-label">Policy B</span>
+                    </div>
+                    {(() => {
+                      const allCategories = [...new Set([
+                        ...policyA.analysis.coverageItems.map(c => c.category),
+                        ...policyB.analysis.coverageItems.map(c => c.category),
+                      ])];
+                      return allCategories.map((cat) => {
+                        const a = policyA.analysis.coverageItems.find(c => c.category === cat);
+                        const b = policyB.analysis.coverageItems.find(c => c.category === cat);
+                        const statusA = a?.status || 'not_covered';
+                        const statusB = b?.status || 'not_covered';
+                        const isDiff = statusA !== statusB;
+                        return (
+                          <div key={cat} className={`compare__diff-row ${isDiff ? 'compare__diff-row--highlight' : ''}`}>
+                            <span className={`compare__diff-badge compare__diff-badge--${statusA}`}>
+                              {statusA === 'covered' ? '✓' : statusA === 'partial' ? '~' : '✗'}
+                            </span>
+                            <span className="compare__diff-category">{cat}</span>
+                            <span className={`compare__diff-badge compare__diff-badge--${statusB}`}>
+                              {statusB === 'covered' ? '✓' : statusB === 'partial' ? '~' : '✗'}
+                            </span>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </motion.div>
+                )}
+
+                {activeTab === 'exclusions' && (
+                  <motion.div 
+                    key="exclusions"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="compare__exclusions-grid"
+                  >
+                    <div className="compare__exclusions-col">
+                      <p className="compare__col-title">Policy A — {policyA.analysis.exclusions.length} exclusions</p>
+                      {policyA.analysis.exclusions.map((exc, i) => (
+                        <div key={i} className={`compare__exclusion compare__exclusion--${exc.severity}`}>
+                          <span className={`compare__severity compare__severity--${exc.severity}`}>{exc.severity}</span>
+                          <p className="compare__exclusion-title">{exc.title}</p>
+                          <p className="compare__exclusion-detail">{exc.detail}</p>
                         </div>
-                      );
-                    });
-                  })()}
-                </div>
-              )}
+                      ))}
+                    </div>
+                    <div className="compare__exclusions-col">
+                      <p className="compare__col-title">Policy B — {policyB.analysis.exclusions.length} exclusions</p>
+                      {policyB.analysis.exclusions.map((exc, i) => (
+                        <div key={i} className={`compare__exclusion compare__exclusion--${exc.severity}`}>
+                          <span className={`compare__severity compare__severity--${exc.severity}`}>{exc.severity}</span>
+                          <p className="compare__exclusion-title">{exc.title}</p>
+                          <p className="compare__exclusion-detail">{exc.detail}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
 
-              {/* Exclusions Side-by-Side */}
-              {activeTab === 'exclusions' && (
-                <div className="compare__exclusions-grid">
-                  <div className="compare__exclusions-col">
-                    <p className="compare__col-title">Policy A — {policyA.analysis.exclusions.length} exclusions</p>
-                    {policyA.analysis.exclusions.map((exc, i) => (
-                      <div key={i} className={`compare__exclusion compare__exclusion--${exc.severity}`}>
-                        <span className={`compare__severity compare__severity--${exc.severity}`}>{exc.severity}</span>
-                        <p className="compare__exclusion-title">{exc.title}</p>
-                        <p className="compare__exclusion-detail">{exc.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="compare__exclusions-col">
-                    <p className="compare__col-title">Policy B — {policyB.analysis.exclusions.length} exclusions</p>
-                    {policyB.analysis.exclusions.map((exc, i) => (
-                      <div key={i} className={`compare__exclusion compare__exclusion--${exc.severity}`}>
-                        <span className={`compare__severity compare__severity--${exc.severity}`}>{exc.severity}</span>
-                        <p className="compare__exclusion-title">{exc.title}</p>
-                        <p className="compare__exclusion-detail">{exc.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Risk Flags Side-by-Side */}
-              {activeTab === 'risks' && (
-                <div className="compare__risks-grid">
-                  <div className="compare__risks-col">
-                    <p className="compare__col-title">Policy A — {policyA.analysis.riskFlags.length} risks</p>
-                    {policyA.analysis.riskFlags.map((risk, i) => (
-                      <Card key={i} variant="lifted" className={`compare__risk-card compare__risk-card--${risk.level}`}>
-                        <span className={`compare__risk-level compare__risk-level--${risk.level}`}>
-                          {risk.level === 'critical' ? '🔴' : risk.level === 'warning' ? '🟡' : '🔵'} {risk.level}
-                        </span>
-                        <p className="compare__risk-flag">{risk.flag}</p>
-                        <p className="compare__risk-detail">{risk.detail}</p>
-                      </Card>
-                    ))}
-                  </div>
-                  <div className="compare__risks-col">
-                    <p className="compare__col-title">Policy B — {policyB.analysis.riskFlags.length} risks</p>
-                    {policyB.analysis.riskFlags.map((risk, i) => (
-                      <Card key={i} variant="lifted" className={`compare__risk-card compare__risk-card--${risk.level}`}>
-                        <span className={`compare__risk-level compare__risk-level--${risk.level}`}>
-                          {risk.level === 'critical' ? '🔴' : risk.level === 'warning' ? '🟡' : '🔵'} {risk.level}
-                        </span>
-                        <p className="compare__risk-flag">{risk.flag}</p>
-                        <p className="compare__risk-detail">{risk.detail}</p>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
+                {activeTab === 'risks' && (
+                  <motion.div 
+                    key="risks"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="compare__risks-grid"
+                  >
+                    <div className="compare__risks-col">
+                      <p className="compare__col-title">Policy A — {policyA.analysis.riskFlags.length} risks</p>
+                      {policyA.analysis.riskFlags.map((risk, i) => (
+                        <Card key={i} variant="lifted" className={`compare__risk-card compare__risk-card--${risk.level}`} hoverable={true}>
+                          <span className={`compare__risk-level compare__risk-level--${risk.level}`}>
+                            {risk.level === 'critical' ? '🔴' : risk.level === 'warning' ? '🟡' : '🔵'} {risk.level}
+                          </span>
+                          <p className="compare__risk-flag">{risk.flag}</p>
+                          <p className="compare__risk-detail">{risk.detail}</p>
+                        </Card>
+                      ))}
+                    </div>
+                    <div className="compare__risks-col">
+                      <p className="compare__col-title">Policy B — {policyB.analysis.riskFlags.length} risks</p>
+                      {policyB.analysis.riskFlags.map((risk, i) => (
+                        <Card key={i} variant="lifted" className={`compare__risk-card compare__risk-card--${risk.level}`} hoverable={true}>
+                          <span className={`compare__risk-level compare__risk-level--${risk.level}`}>
+                            {risk.level === 'critical' ? '🔴' : risk.level === 'warning' ? '🟡' : '🔵'} {risk.level}
+                          </span>
+                          <p className="compare__risk-flag">{risk.flag}</p>
+                          <p className="compare__risk-detail">{risk.detail}</p>
+                        </Card>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Verdict */}
               <Card variant="lifted" className="compare__verdict">
@@ -518,7 +540,7 @@ function UploadSlot({ label, file, onBrowse, onRemove, onDrop, comparing, progre
 /* ── Score Card Component ── */
 function ScoreCard({ label, name, score, grade, type }) {
   return (
-    <Card variant="lifted" className="compare__score-card">
+    <Card variant="lifted" className="compare__score-card" hoverable={true}>
       <p className="compare__score-label">{label}</p>
       <div className="compare__score-dial">
         <svg viewBox="0 0 80 80" className="compare__score-svg">
