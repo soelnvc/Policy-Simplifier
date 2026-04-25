@@ -72,10 +72,6 @@
 }
 
 .workspace__title {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
   margin-bottom: 4px;
 }
 
@@ -87,10 +83,56 @@
 }
 
 .workspace__subtitle {
-  font-size: var(--text-body-lg);
-  color: #86868b;
   max-width: 560px;
-  line-height: 1.6;
+}
+
+/* ── Actions ── */
+.workspace__save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 44px;
+  min-width: 175px;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.workspace__save-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.workspace__save-btn--active {
+  background: var(--accent-green-soft);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.2);
+}
+
+.workspace__save-btn--active:hover {
+  background: rgba(46, 204, 113, 0.15);
+  box-shadow: 0 8px 30px rgba(46, 204, 113, 0.25);
+}
+
+.workspace__save-btn-label {
+  letter-spacing: -0.01em;
+}
+
+.workspace__new-btn {
+  min-width: 175px !important;
+  height: 44px !important;
 }
 
 /* ============================================================

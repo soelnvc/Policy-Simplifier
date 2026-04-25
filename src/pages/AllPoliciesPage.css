@@ -1,16 +1,18 @@
 .all-policies {
   min-height: 100vh;
   padding-bottom: var(--space-4xl);
-  background: #f8f8f8; /* Slightly off-white for contrast */
+  background: transparent;
 }
 
 .all-policies__hero {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
   width: 100%;
-  padding-top: 110px;
-  padding-bottom: var(--space-2xl);
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-3xl);
+  padding: var(--space-xl) 0 var(--space-2xl);
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03); /* Subtle separation */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .all-policies__filters-top {
@@ -72,7 +74,8 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   letter-spacing: 0.05em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
 }
 
 .all-policies__carousel-item--active {
@@ -84,7 +87,13 @@
   margin-top: 2px;
   width: 600px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1) 15%, rgba(0, 0, 0, 0.1) 85%, transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 0, 0, 0.1) 15%,
+    rgba(0, 0, 0, 0.1) 85%,
+    transparent
+  );
   position: relative;
 }
 
@@ -108,13 +117,7 @@
 }
 
 .all-policies__title {
-  font-family: var(--font-headline);
-  font-size: 4rem;
-  font-weight: 800; /* Robust bold as per reference */
-  color: #1d1d1f;
   margin-bottom: 0;
-  letter-spacing: -0.04em;
-  line-height: 1;
 }
 
 .all-policies__subtitle {
@@ -213,12 +216,14 @@
   gap: var(--space-md);
   position: relative;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .all-policies__card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
 /* Card Header */
@@ -337,7 +342,7 @@
   .all-policies {
     padding-top: 140px;
   }
-  
+
   .all-policies__title {
     font-size: 2.5rem;
   }
