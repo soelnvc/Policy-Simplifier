@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { updateProfile } from 'firebase/auth';
+import { auth } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
 import { getFavoritePolicies, toggleFavoritePolicy } from '../services/dbService';
 import { useToast } from '../context/ToastContext';
@@ -16,6 +18,7 @@ function SettingsPage() {
   // Profile
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [email] = useState(user?.email || '');
+  const [isSaving, setIsSaving] = useState(false);
 
   // Password
   const [currentPassword, setCurrentPassword] = useState('');
@@ -77,9 +80,20 @@ function SettingsPage() {
   const userInitial = user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U';
 
   // Handlers
-  const handleProfileSave = (e) => {
+  const handleProfileSave = async (e) => {
     e.preventDefault();
-    addToast('Profile information saved successfully.', 'success');
+    if (!auth.currentUser) return;
+
+    setIsSaving(true);
+    try {
+      await updateProfile(auth.currentUser, { displayName });
+      addToast('Profile information updated successfully.', 'success');
+    } catch (err) {
+      console.error("Profile Update Error:", err);
+      addToast('Failed to update profile.', 'error');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -192,8 +206,8 @@ function SettingsPage() {
                     </div>
 
                     <div className="settings__card-actions">
-                      <Button type="submit" variant="primary">
-                        Save Changes
+                      <Button type="submit" variant="primary" loading={isSaving}>
+                        {isSaving ? 'Updating...' : 'Save Changes'}
                       </Button>
                     </div>
                   </form>
